@@ -1,0 +1,7 @@
+{
+  "Title": "Images Uploader",
+  "Description": "Here you can upload images and crop their automatically",
+  "Crop.title": "Select crop size",
+  "File.format-error": "Format error. Only .JPG or .JPEG files allowed",
+  "Upload.text": "Drop here only .JPG or .JPEG files please"
+}

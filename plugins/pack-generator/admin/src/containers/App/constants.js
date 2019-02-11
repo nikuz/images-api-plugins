@@ -1,0 +1,15 @@
+
+import keyMirror from '../../utils/key-mirror';
+
+export default keyMirror('PACK_GENERATOR', [
+    'USER_LOADING_REQUEST',
+    'USER_LOADING_SUCCESS',
+    'USER_LOADING_ERROR',
+    'IMAGES_LOADING_REQUEST',
+    'IMAGES_LOADING_SUCCESS',
+    'IMAGES_LOADING_ERROR',
+    'QUOTES_LOADING_REQUEST',
+    'QUOTES_LOADING_SUCCESS',
+    'QUOTES_LOADING_ERROR',
+    'CLEAR_STORE',
+]);

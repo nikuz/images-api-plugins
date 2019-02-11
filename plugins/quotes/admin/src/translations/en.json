@@ -1,0 +1,13 @@
+{
+  "HomePage.title": "Quotes Uploader",
+  "HomePage.description": "Here you can upload quotes in .TSV format",
+  "Upload.text": "Drop here only .tsv (tab separated list) files please",
+  "Upload.loading": "loading...",
+  "New.title": "New Quotes",
+  "Duplicates.title": "Duplicate Quotes",
+  "Upload.button": "Upload All",
+  "Uploading.done": "All quotes uploaded",
+  "Quotes.error": "Can't get exiting quotes",
+  "User.error": "Can't get current user",
+  "File.format-error": "Format error. Only .tsv files allowed"
+}

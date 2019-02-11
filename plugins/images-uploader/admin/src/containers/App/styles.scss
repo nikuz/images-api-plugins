@@ -1,0 +1,102 @@
+
+.pluginImagesUploader_container {
+  position: relative;
+}
+
+.pluginImagesUploader_cropSelectorTitle {
+  margin: 0;
+  font-size: 18px;
+}
+
+.pluginImagesUploader_cropSelectorContainer {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 3em;
+}
+
+.pluginImagesUploader_fileLoaderContainer {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 20em;
+  border: 2px dashed #E3E9F3;
+  border-radius: 2em;
+  text-align: center;
+
+  &:hover {
+    cursor: pointer;
+  }
+
+  input {
+    display: none;
+  }
+
+  .icon {
+    width: 82px;
+    height: 45px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+
+    i {
+      font-size: 3em;
+    }
+  }
+
+  .textWrapper {
+    margin-top: 10px;
+    text-align: center;
+    font-size: 2em;
+    color: #9EA7B8;
+
+    u {
+      color: #1C5DE7;
+    }
+  }
+}
+
+.pluginImagesUploader_fileLoaderContainerHover {
+  background-color: rgba(28, 93, 231, 0.01) !important;
+  border: 2px dashed rgba(28, 93, 231, 0.10) !important;
+}
+
+.pluginImagesUploader_blocker {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+.pluginImagesUploader_loading {
+  margin-top: 20px;
+
+  > div > div {
+    width: 50px;
+    height: 50px;
+  }
+}
+
+.pluginImagesUploader_fileItem {
+  position: relative;
+  display: flex;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+.pluginImagesUploader_fileItemSize {
+  margin: 0 30px;
+}
+
+.pluginImagesUploader_fileItemCheck {
+  flex: 1;
+  display: flex;
+  justify-content: flex-end;
+
+  i {
+    color: green;
+    font-size: 2em;
+  }
+}
