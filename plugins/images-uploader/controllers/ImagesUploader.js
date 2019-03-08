@@ -7,12 +7,16 @@ module.exports = {
     },
 
     upload: async (ctx) => {
-        const { files = {} } = ctx.request.body.files;
-        const { size } = ctx.request.body.fields;
+        const { file = {} } = ctx.request.body.files;
+        const {
+            size,
+            genre,
+        } = ctx.request.body.fields;
 
         const uploadedFiles = await strapi.plugins['images-uploader'].services.imagesuploader.upload(
-            files,
+            file,
             size,
+            genre,
             ctx.request.header.host,
             ctx.request.header.authorization
         );

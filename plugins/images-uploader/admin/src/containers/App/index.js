@@ -10,14 +10,23 @@ import injectSaga from 'utils/injectSaga';
 import View from './view';
 
 import {
+    genresLoadingRequest,
+    setFiles,
+    uploadStart,
     uploadRequest,
+    uploadDone,
+    uploadClearState,
     clearStore,
 } from './actions';
 
 import {
     isLoading,
-    getFiles,
     getError,
+    getFiles,
+    getGenres,
+    isUploadLoading,
+    isUploadRequested,
+    isUploadingDone,
 } from './selectors';
 
 import reducer from './reducer';
@@ -25,7 +34,12 @@ import saga from './saga';
 
 const mapDispatchToProps = dispatch => bindActionCreators(
     {
+        getGenres: genresLoadingRequest,
+        setFiles,
+        uploadStart,
         uploadRequest,
+        uploadDone,
+        uploadClearState,
         clearStore,
     },
     dispatch
@@ -33,8 +47,12 @@ const mapDispatchToProps = dispatch => bindActionCreators(
 
 const mapStateToProps = createStructuredSelector({
     loading: isLoading(),
-    files: getFiles(),
     error: getError(),
+    files: getFiles(),
+    genres: getGenres(),
+    uploadLoading: isUploadLoading(),
+    uploadRequested: isUploadRequested(),
+    uploadingDone: isUploadingDone(),
 });
 
 const withConnect = connect(mapStateToProps, mapDispatchToProps);

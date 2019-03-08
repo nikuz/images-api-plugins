@@ -3,6 +3,11 @@
   position: relative;
 }
 
+.pluginImagesUploader_parametersContainer {
+  display: flex;
+  justify-content: space-between;
+}
+
 .pluginImagesUploader_cropSelectorTitle {
   margin: 0;
   font-size: 18px;
@@ -71,7 +76,13 @@
 }
 
 .pluginImagesUploader_loading {
-  margin-top: 20px;
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  padding-top: 100px;
+  background-color: rgba(255, 255, 255, 0.5);
 
   > div > div {
     width: 50px;
@@ -99,4 +110,20 @@
     color: green;
     font-size: 2em;
   }
+}
+
+.pluginImagesUploader_fileItemError {
+  position: absolute;
+  right: 1em;
+  top: 0;
+
+  i {
+    color: red;
+    font-size: 2em;
+  }
+}
+
+.pluginImagesUploader_form {
+  display: flex;
+  justify-content: space-between;
 }

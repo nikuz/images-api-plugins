@@ -1,35 +1,66 @@
 
+import { LOCATION_CHANGE } from 'react-router-redux';
 import {
     takeLatest,
     call,
     put,
     fork,
+    take,
+    cancel,
 } from 'redux-saga/effects';
 import request from 'utils/request';
 
 import {
+    genresLoadingSuccess,
+    genresLoadingError,
     uploadSuccess,
     uploadError,
 } from './actions';
 
 import constants from './constants';
 
-const { UPLOAD_REQUEST } = constants;
+const {
+    GENRES_LOADING_REQUEST,
+    UPLOAD_REQUEST,
+} = constants;
 
-function* uploadFiles(action) {
+export function* getGenres() {
+    try {
+        const requestURL = '/content-manager/explorer/genre';
+        const response = yield call(request, requestURL, { method: 'GET' });
+
+        if (response) {
+            yield put(genresLoadingSuccess(response));
+        } else {
+            yield put(genresLoadingError());
+        }
+    } catch (e) {
+        yield put(genresLoadingError(e));
+    }
+}
+
+function* uploadFile(action) {
     try {
         const headers = {
             'X-Forwarded-Host': 'strapi',
         };
+        const formData = new FormData();
+        formData.append('file', action.payload.file);
+        formData.append('size', action.payload.size);
+        formData.append('genre', action.payload.genre);
         const response = yield call(
             request,
             '/images-uploader',
-            { method: 'POST', headers, body: action.payload },
+            { method: 'POST', headers, body: formData },
             false,
             false
         );
 
-        yield put(uploadSuccess(response));
+        if (response) {
+            yield put(uploadSuccess(response));
+        } else {
+            yield put(uploadError());
+        }
     } catch (err) {
         if (window.strapi) {
             window.strapi.notification.error('notification.error');
@@ -39,5 +70,11 @@ function* uploadFiles(action) {
 }
 
 export default function* defaultSaga() {
-    yield fork(takeLatest, UPLOAD_REQUEST, uploadFiles);
+    const getGenresRequest = yield fork(takeLatest, GENRES_LOADING_REQUEST, getGenres);
+    const filUploadRequest = yield fork(takeLatest, UPLOAD_REQUEST, uploadFile);
+
+    // Suspend execution until location changes
+    yield take(LOCATION_CHANGE);
+    yield cancel(getGenresRequest);
+    yield cancel(filUploadRequest);
 }

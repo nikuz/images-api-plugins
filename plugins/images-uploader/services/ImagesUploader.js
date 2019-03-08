@@ -4,7 +4,7 @@ const request = require('request');
 const gm = require('gm').subClass({ imageMagick: true });
 
 module.exports = {
-    upload: async (files, size, host, authorization) => {
+    upload: async (files, size, genre, host, authorization) => {
         const filesArray = Array.isArray(files) ? files : [files];
 
         return Promise.all(
@@ -15,7 +15,9 @@ module.exports = {
                 const uploadedImage = await strapi.plugins['images-uploader'].services.imagesuploader.add(
                     host,
                     authorization,
-                    name
+                    file,
+                    name,
+                    genre
                 );
 
                 return uploadedImage;
@@ -47,7 +49,7 @@ module.exports = {
         })
     ),
 
-    add: async (host, authorization, file) => (
+    add: async (host, authorization, file, croppedFilePath, genre) => (
         new Promise((resolve, reject) => {
             request.post({
                 url: `http://${host}/upload`,
@@ -55,7 +57,7 @@ module.exports = {
                     authorization,
                 },
                 formData: {
-                    files: fs.createReadStream(file),
+                    files: fs.createReadStream(croppedFilePath),
                 },
             }, (err, httpResponse, body) => {
                 if (err) {
@@ -64,7 +66,29 @@ module.exports = {
                 }
 
                 resolve(JSON.parse(body)[0]);
+                fs.unlinkSync(file.path);
+                fs.unlinkSync(croppedFilePath);
             });
-        })
+        }).then(fileUploadResult => (
+            new Promise((resolve, reject) => {
+                request.post({
+                    url: `http://${host}/content-manager/explorer/image`,
+                    headers: {
+                        authorization,
+                    },
+                    formData: {
+                        url: fileUploadResult.url,
+                        genre,
+                    },
+                }, (err) => {
+                    if (err) {
+                        reject(err);
+                        return;
+                    }
+
+                    resolve(fileUploadResult);
+                });
+            })
+        ))
     ),
 };

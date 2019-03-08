@@ -120,16 +120,14 @@ export default class Slider extends React.Component {
 
         return (
             <div
-                key={key}
+                key={`${key}-${item.generateTime}`}
                 ref={(el) => {
                     if (currentSlide === key) {
                         this.currentSlideEl = el;
                     }
                 }}
                 className={styles.pluginPackGenerator_sliderItem}
-            >
-                {item.generateTime}
-            </div>
+            />
         );
     };
 
@@ -149,7 +147,7 @@ export default class Slider extends React.Component {
             <div className={styles.pluginPackGenerator_sliderContainer}>
                 <div className={styles.pluginPackGenerator_sliderArrow}>
                     <Ico icoType="angle-left" />
-                    <div
+                    <span
                         className={styles.pluginPackGenerator_sliderBlocker}
                         onClick={this.slideLeft}
                     />
@@ -166,14 +164,14 @@ export default class Slider extends React.Component {
                     )}
                 >
                     <Ico icoType="angle-right" />
-                    <div
+                    <span
                         className={styles.pluginPackGenerator_sliderBlocker}
                         onClick={this.slideRight}
                     />
                 </div>
                 <div className={styles.pluginPackGenerator_sliderRefresh}>
                     <Ico icoType="repeat" />
-                    <div
+                    <span
                         className={styles.pluginPackGenerator_sliderBlocker}
                         onClick={this.slideRefresh}
                     />

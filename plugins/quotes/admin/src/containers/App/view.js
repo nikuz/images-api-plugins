@@ -156,6 +156,10 @@ export default class App extends React.PureComponent {
             <li key={key} className={className}>
                 <p>{quote.text}</p>
                 <i>{quote.author}</i>
+                <span className={styles.pluginQuotesLoader_quotesListItemGenre}>
+                    &nbsp;&ndash;&nbsp;
+                    {quote.genre}
+                </span>
 
                 {!quote.loading && !quote.uploaded && !quote.error && !duplicate && (
                     <div className={styles.pluginQuotesLoader_quotesListDelete}>

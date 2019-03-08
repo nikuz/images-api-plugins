@@ -3,5 +3,10 @@
   "Description": "Here you can upload images and crop their automatically",
   "Crop.title": "Select crop size",
   "File.format-error": "Format error. Only .JPG or .JPEG files allowed",
-  "Upload.text": "Drop here only .JPG or .JPEG files please"
+  "Upload.text": "Drop here only .JPG or .JPEG files please",
+  "Uploading.done": "All quotes uploaded",
+  "Images-List.title": "New images",
+  "Images-List.upload": "Upload",
+  "Genre.title": "Select genre",
+  "Genre.no-selection-error": "Please select genre"
 }
