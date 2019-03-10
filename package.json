@@ -1,7 +1,7 @@
 {
   "name": "images-api-quotes-plugin",
   "private": true,
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A Strapi application.",
   "main": "./server.js",
   "scripts": {
@@ -9,7 +9,7 @@
     "setup:plugins": "cd admin && npm run setup ---plugins",
     "start": "node server.js",
     "strapi": "node_modules/strapi/bin/strapi.js",
-    "eslint": "eslint config/**/*.js plugins/pack-generator plugins/quotes plugins/images-uploader -f table",
+    "eslint": "eslint config/**/*.js plugins/pack-generator plugins/quotes plugins/images-uploader plugins/templates-generator -f table",
     "postinstall": "node node_modules/strapi/lib/utils/post-install.js"
   },
   "devDependencies": {

@@ -1,11 +1,11 @@
 {
-  "name": "strapi-plugin-pack-generator",
+  "name": "strapi-plugin-templates-generator",
   "version": "0.0.1",
   "description": "This is the description of the plugin.",
   "strapi": {
-    "name": "Pack generator",
+    "name": "Templates generator",
     "icon": "cube",
-    "description": "Description of pack-generator plugin."
+    "description": "Description of templates-generator plugin."
   },
   "scripts": {
     "analyze:clean": "node ./node_modules/strapi-helper-plugin/node_modules/.bin/rimraf stats.json",
@@ -22,7 +22,9 @@
     "prepublishOnly": "npm run build"
   },
   "dependencies": {
-    "@nikuz/images-core": "github:nikuz/images-core"
+    "@nikuz/images-core": "github:nikuz/images-core",
+    "@nikuz/images-configurator": "github:nikuz/images-configurator",
+    "request": "2.88.0"
   },
   "devDependencies": {
     "strapi-helper-plugin": "3.0.0-alpha.22"

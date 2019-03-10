@@ -1,0 +1,116 @@
+
+.pluginTemplatesGenerator_container {
+  position: relative;
+}
+
+.pluginTemplatesGenerator_parametersContainer {
+  display: flex;
+  justify-content: space-between;
+}
+
+.pluginTemplatesGenerator_cropSelectorTitle {
+  margin: 0;
+  font-size: 18px;
+}
+
+.pluginTemplatesGenerator_cropSelectorContainer {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 3em;
+}
+
+.pluginTemplatesGenerator_loading {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  padding-top: 100px;
+  background-color: rgba(255, 255, 255, 0.5);
+
+  > div > div {
+    width: 50px;
+    height: 50px;
+  }
+}
+
+.pluginTemplatesGenerator_fileLoaderContainer {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 20em;
+  border: 2px dashed #E3E9F3;
+  border-radius: 2em;
+  text-align: center;
+
+  &:hover {
+    cursor: pointer;
+  }
+
+  input {
+    display: none;
+  }
+
+  .icon {
+    width: 82px;
+    height: 45px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+
+    i {
+      font-size: 3em;
+    }
+  }
+
+  .textWrapper {
+    margin-top: 10px;
+    text-align: center;
+    font-size: 2em;
+    color: #9EA7B8;
+
+    u {
+      color: #1C5DE7;
+    }
+  }
+}
+
+.pluginTemplatesGenerator_fileLoaderContainerHover {
+  background-color: rgba(28, 93, 231, 0.01) !important;
+  border: 2px dashed rgba(28, 93, 231, 0.10) !important;
+}
+
+.pluginTemplatesGenerator_blocker {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+.pluginTemplatesGenerator_configuratorContainer {
+  display: flex;
+}
+
+.pluginTemplatesGenerator_configuratorCanvas {
+  width: 500px;
+}
+
+.pluginTemplatesGenerator_configurator {
+  flex: 1;
+  margin-left: 20px;
+}
+
+.pluginTemplatesGenerator_configuratorButtons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+
+.pluginTemplatesGenerator_configuratorClear {
+  margin: 0;
+  border: 0.1rem solid #F64D0A;
+  color: #F64D0A;
+}

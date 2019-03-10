@@ -2,7 +2,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import cn from 'classnames';
-import ImageRenderer from '@nikuz/images-renderer';
+import ImageCore from '@nikuz/images-core';
 
 import Ico from 'components/Ico';
 
@@ -46,7 +46,7 @@ export default class Slider extends React.Component {
             return;
         }
 
-        this.currentSlide = new ImageRenderer({
+        this.currentSlide = new ImageCore({
             container: this.currentSlideEl,
             width: 600,
             height: 600,
