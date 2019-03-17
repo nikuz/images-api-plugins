@@ -22,4 +22,17 @@ module.exports = {
             });
         }
     },
+
+    save: async (ctx) => {
+        const { file = {} } = ctx.request.body.files;
+
+        const newTemplate = await strapi.plugins['templates-generator'].services.templatesgenerator.save(
+            file,
+            ctx.request.body.fields,
+            ctx.request.header.host,
+            ctx.request.header.authorization
+        );
+
+        ctx.send(newTemplate);
+    },
 };

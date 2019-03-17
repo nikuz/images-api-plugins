@@ -1,6 +1,6 @@
 {
   "name": "strapi-plugin-templates-generator",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "This is the description of the plugin.",
   "strapi": {
     "name": "Templates generator",
@@ -22,7 +22,6 @@
     "prepublishOnly": "npm run build"
   },
   "dependencies": {
-    "@nikuz/images-core": "github:nikuz/images-core",
     "@nikuz/images-configurator": "github:nikuz/images-configurator",
     "request": "2.88.0"
   },

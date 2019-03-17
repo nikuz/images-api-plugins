@@ -39,6 +39,30 @@ const getUploadResult = () => (
     createSelector(selectDomain(), substate => substate.uploadResult)
 );
 
+const getSaveLoading = () => (
+    createSelector(selectDomain(), substate => substate.saveLoading)
+);
+
+const getSaveError = () => (
+    createSelector(selectDomain(), substate => substate.saveError)
+);
+
+const getSaveResult = () => (
+    createSelector(selectDomain(), substate => substate.saveResult)
+);
+
+const getTemplatesLoading = () => (
+    createSelector(selectDomain(), substate => substate.templatesLoading)
+);
+
+const getTemplatesError = () => (
+    createSelector(selectDomain(), substate => substate.templatesError)
+);
+
+const getTemplates = () => (
+    createSelector(selectDomain(), substate => substate.templates)
+);
+
 export {
     getUser,
     getUserLoading,
@@ -49,4 +73,10 @@ export {
     getUploadLoading,
     getUploadError,
     getUploadResult,
+    getSaveLoading,
+    getSaveError,
+    getSaveResult,
+    getTemplatesLoading,
+    getTemplatesError,
+    getTemplates,
 };

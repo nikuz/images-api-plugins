@@ -44,5 +44,15 @@
   "Crop.title": "Select crop size",
   "Genre.title": "Select genre",
   "File.format-error": "Format error. Only .JPG or .JPEG files allowed",
-  "Format.title": "Format"
+  "Format.title": "Format",
+  "Save": "Save template",
+  "Save.Select-Genre-Error": "Please select genre",
+  "Save.Success": "Save success",
+  "Tab.Upload": "Upload",
+  "Tab.Preview": "Preview",
+  "Preview.Select-Genre-Error": "Please select genre",
+  "Preview.Filter": "Filter",
+  "Preview.TextFontFamily": "Text font",
+  "Preview.AuthorFontFamily": "Author font",
+  "Preview.Remove": "Remove"
 }

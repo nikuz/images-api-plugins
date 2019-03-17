@@ -16,26 +16,55 @@ import InputSelect from 'components/InputSelect';
 import styles from './styles.scss';
 
 export default class App extends React.Component {
+    previewVideoEl;
+
     state = {
         crop: '1080',
         image: null,
         genre: '',
-        format: 'jpg',
+        format: 'jpeg',
         isDragging: false,
+        configurator: {},
+        tab: 'upload',
     };
-
-    canvas;
-
-    canvasContainer;
 
     componentDidMount() {
         this.props.userLoadingRequest();
         this.props.getGenres();
     }
 
+    componentDidUpdate(prevProps, prevState) {
+        if (prevState.genre !== this.state.genre && this.state.tab === 'preview') {
+            this.getTemplates();
+        }
+    }
+
     componentWillUnmount() {
         this.props.clearStore();
     }
+
+    handleTabSelection = (tab) => {
+        this.setState({ tab });
+        if (tab === 'preview') {
+            this.getTemplates();
+        }
+    };
+
+    getTemplates = () => {
+        const { genre } = this.state;
+        const { templates } = this.props;
+
+        if (templates.length) {
+            return;
+        }
+
+        if (genre === '') {
+            strapi.notification.error('templates-generator.Preview.Select-Genre-Error');
+            return;
+        }
+
+        this.props.getTemplates();
+    };
 
     handleDragEnter = () => this.setState({ isDragging: true });
 
@@ -67,18 +96,33 @@ export default class App extends React.Component {
         const {
             image,
             crop,
-            genre,
             format,
         } = this.state;
 
+        let width;
+        let height;
+        if (format === 'gif' || format === 'mp4') {
+            width = 600;
+            height = 600;
+        } else if (crop === '1024') {
+            width = crop;
+            height = crop / 2;
+        } else {
+            width = crop;
+            height = crop;
+        }
+
+        this.props.clearSaveResult();
+        this.setState({
+            configurator: data,
+        });
         this.props.upload({
             file: image,
             size: crop,
-            genre,
             format,
             ...data,
-            width: 500,
-            height: 500,
+            width,
+            height,
         });
     };
 
@@ -89,20 +133,22 @@ export default class App extends React.Component {
     };
 
     handleGenreChange = (e) => {
+        const { genres } = this.props;
         this.setState({
-            genre: e.target.value,
+            genre: genres.find(item => item.name === e.target.value).id,
         });
     };
 
     handleFormatChange = (e) => {
+        this.props.clearUploadResult();
         this.setState({
             format: e.target.value,
         });
     };
 
     handleRefresh = () => {
-        if (this.canvas) {
-            this.canvas.rerender();
+        if (this.previewVideoEl) {
+            this.previewVideoEl.play();
         }
     };
 
@@ -111,6 +157,131 @@ export default class App extends React.Component {
             image: null,
         });
         this.props.clearStore();
+    };
+
+    handleSave = () => {
+        const {
+            genre,
+            configurator,
+            format,
+        } = this.state;
+        const {
+            uploadResult,
+            user,
+        } = this.props;
+
+        const arr = uploadResult.split(',');
+        const mime = arr[0].match(/:(.*?);/)[1];
+        const bstr = atob(arr[1]);
+        let n = bstr.length;
+        const u8arr = new Uint8Array(n);
+
+        while (n--) {
+            u8arr[n] = bstr.charCodeAt(n);
+        }
+
+        const templateFile = new File([u8arr], `template.${format}`, { type: mime });
+
+        if (genre === '') {
+            strapi.notification.error('templates-generator.Save.Select-Genre-Error');
+            return;
+        }
+
+        this.props.save({
+            ...configurator,
+            file: templateFile,
+            genre,
+            format,
+            user: user._id, // eslint-disable-line
+        });
+    };
+
+    handleRemove = (template) => {
+        this.props.removeTemplate(template.fileId, template.id);
+    };
+
+    renderTemplates = () => {
+        const {
+            genre,
+            format,
+        } = this.state;
+        const { templates } = this.props;
+        const filteredTemplates = templates.filter(item => (
+            item.format === format && item.genre.id === genre
+        ));
+        const size = 300;
+
+        return (
+            <div className={styles.pluginTemplatesGenerator_previewContainer}>
+                { filteredTemplates.map((item) => {
+                    const url = `${strapi.backendURL}${item.image}`;
+                    return (
+                        <div
+                            key={item.id}
+                            className={styles.pluginTemplatesGenerator_previewContainerItem}
+                        >
+                            {format === 'mp4' && (
+                                <video
+                                    width={`${size}px`}
+                                    autoPlay
+                                    controls
+                                >
+                                    <source type="video/mp4" src={url} />
+                                </video>
+                            )}
+                            {format !== 'mp4' && (
+                                <img
+                                    src={url}
+                                    width={`${size}px`}
+                                    alt=""
+                                />
+                            )}
+                            { !item.loading && (
+                                <div
+                                    className={
+                                        styles.pluginTemplatesGenerator_previewContainerItemCont
+                                    }
+                                >
+                                    <div>
+                                        <FormattedMessage id="templates-generator.Preview.Filter" />
+                                        :&nbsp;
+                                        {item.filter}
+                                    </div>
+                                    <div>
+                                        <FormattedMessage id="templates-generator.Preview.TextFontFamily" />
+                                        :&nbsp;
+                                        {item.textFontFamily}
+                                    </div>
+                                    <div>
+                                        <FormattedMessage id="templates-generator.Preview.AuthorFontFamily" />
+                                        :&nbsp;
+                                        {item.authorFontFamily}
+                                    </div>
+                                    <a href={url} target="_blank" />
+                                    <Button
+                                        label="templates-generator.Preview.Remove"
+                                        secondaryHotline
+                                        className={
+                                            styles.pluginTemplatesGenerator_previewContainerButton
+                                        }
+                                        onClick={() => this.handleRemove(item)}
+                                    />
+                                </div>
+                            ) }
+                            { item.loading && (
+                                <div
+                                    className={
+                                        styles.pluginTemplatesGenerator_previewContainerLoading
+                                    }
+                                >
+                                    <LoadingIndicator />
+                                </div>
+                            ) }
+                        </div>
+                    );
+                }) }
+            </div>
+        );
     };
 
     render() {
@@ -123,6 +294,11 @@ export default class App extends React.Component {
             uploadLoading,
             uploadError,
             uploadResult,
+            saveLoading,
+            saveError,
+            saveResult,
+            templatesLoading,
+            templatesError,
         } = this.props;
         const {
             image,
@@ -130,11 +306,24 @@ export default class App extends React.Component {
             genre,
             format,
             isDragging,
+            tab,
         } = this.state;
+        const selectedGenre = genres.find(item => item.id === genre);
+        const isPreviewTab = tab === 'preview';
 
         const fileLoaderContainerClassName = cn(
             styles.pluginTemplatesGenerator_fileLoaderContainer,
             isDragging && styles.pluginTemplatesGenerator_fileLoaderContainerHover
+        );
+        const resultContainerClassName = styles
+            .pluginTemplatesGenerator_configuratorResultContainer;
+        const uploadTabClassName = cn(
+            styles.pluginTemplatesGenerator_tab,
+            !isPreviewTab && styles.pluginTemplatesGenerator_tabActive
+        );
+        const previewTabClassName = cn(
+            styles.pluginTemplatesGenerator_tab,
+            isPreviewTab && styles.pluginTemplatesGenerator_tabActive
         );
 
         const selectStyle = { minWidth: '170px', maxWidth: '200px' };
@@ -150,22 +339,42 @@ export default class App extends React.Component {
                             id: 'templates-generator.Description',
                         }}
                     />
+                    <div className={styles.pluginTemplatesGenerator_tabs}>
+                        <div
+                            className={uploadTabClassName}
+                            onClick={() => this.handleTabSelection('upload')}
+                        >
+                            <FormattedMessage id="templates-generator.Tab.Upload" />
+                        </div>
+                        <div
+                            className={previewTabClassName}
+                            onClick={() => this.handleTabSelection('preview')}
+                        >
+                            <FormattedMessage id="templates-generator.Tab.Preview" />
+                        </div>
+                    </div>
 
                     <div className={styles.pluginTemplatesGenerator_parametersContainer}>
-                        <div>
-                            <h3 className={styles.pluginTemplatesGenerator_cropSelectorTitle}>
-                                <FormattedMessage id="templates-generator.Crop.title" />
-                            </h3>
-                            <div className={styles.pluginTemplatesGenerator_cropSelectorContainer}>
-                                <InputSelect
-                                    onChange={this.handleCropSizeChange}
-                                    name="cropSize"
-                                    value={crop}
-                                    selectOptions={['1080', '735', '1024']}
-                                    style={selectStyle}
-                                />
+                        { !isPreviewTab && (
+                            <div>
+                                <h3 className={styles.pluginTemplatesGenerator_cropSelectorTitle}>
+                                    <FormattedMessage id="templates-generator.Crop.title" />
+                                </h3>
+                                <div
+                                    className={
+                                        styles.pluginTemplatesGenerator_cropSelectorContainer
+                                    }
+                                >
+                                    <InputSelect
+                                        onChange={this.handleCropSizeChange}
+                                        name="cropSize"
+                                        value={crop}
+                                        selectOptions={['1080', '735', '1024']}
+                                        style={selectStyle}
+                                    />
+                                </div>
                             </div>
-                        </div>
+                        ) }
                         <div>
                             <h3 className={styles.pluginTemplatesGenerator_cropSelectorTitle}>
                                 <FormattedMessage id="templates-generator.Format.title" />
@@ -175,7 +384,7 @@ export default class App extends React.Component {
                                     onChange={this.handleFormatChange}
                                     name="format"
                                     value={format}
-                                    selectOptions={['jpg', 'gif', 'mp4']}
+                                    selectOptions={['jpeg', 'gif', 'mp4']}
                                     style={selectStyle}
                                 />
                             </div>
@@ -188,7 +397,7 @@ export default class App extends React.Component {
                                 <InputSelect
                                     onChange={this.handleGenreChange}
                                     name="genre"
-                                    value={genre}
+                                    value={selectedGenre ? selectedGenre.name : ''}
                                     selectOptions={[''].concat(genres).map(item => item.name)}
                                     style={selectStyle}
                                 />
@@ -196,7 +405,7 @@ export default class App extends React.Component {
                         </div>
                     </div>
 
-                    { !image && (
+                    { !image && !isPreviewTab && (
                         <label
                             className={fileLoaderContainerClassName}
                             onDragEnter={this.handleDragEnter}
@@ -231,12 +440,25 @@ export default class App extends React.Component {
                             </div>
                         </label>
                     ) }
-                    { image && (
+                    { image && !isPreviewTab && (
                         <div className={styles.pluginTemplatesGenerator_configuratorContainer}>
                             <div className={styles.pluginTemplatesGenerator_configuratorCanvas}>
-                                <div>
-                                    { uploadResult && (
-                                        <img src={uploadResult} alt="" />
+                                <div className={resultContainerClassName}>
+                                    { !uploadError && uploadResult && format !== 'mp4' && (
+                                        <img
+                                            src={uploadResult}
+                                            width="500px"
+                                            alt=""
+                                        />
+                                    ) }
+                                    { !uploadError && !uploadLoading && uploadResult && format === 'mp4' && (
+                                        <video
+                                            ref={el => this.previewVideoEl = el}
+                                            width="500px"
+                                            autoPlay
+                                        >
+                                            <source type="video/mp4" src={uploadResult} />
+                                        </video>
                                     ) }
                                     { uploadLoading && (
                                         <div
@@ -252,38 +474,87 @@ export default class App extends React.Component {
                                 <div
                                     className={styles.pluginTemplatesGenerator_configuratorButtons}
                                 >
-                                    <Button
-                                        label="templates-generator.Refresh"
-                                        secondaryHotline
-                                        onClick={this.handleRefresh}
-                                    />
-                                    <Button
-                                        label="templates-generator.Clear"
-                                        secondaryHotline
+                                    <div
                                         className={
-                                            styles.pluginTemplatesGenerator_configuratorClear
+                                            styles.pluginTemplatesGenerator_configuratorButtonsHead
                                         }
-                                        onClick={this.handleClear}
-                                    />
+                                    >
+                                        <Button
+                                            label="templates-generator.Refresh"
+                                            secondaryHotline
+                                            onClick={this.handleRefresh}
+                                        />
+                                        <Button
+                                            label="templates-generator.Clear"
+                                            secondaryHotline
+                                            className={
+                                                styles.pluginTemplatesGenerator_configuratorClear
+                                            }
+                                            onClick={this.handleClear}
+                                        />
+                                    </div>
+                                    { uploadResult && !saveError && !saveResult && (
+                                        <Button
+                                            label="templates-generator.Save"
+                                            primary
+                                            className={
+                                                styles.pluginTemplatesGenerator_saveButton
+                                            }
+                                            onClick={this.handleSave}
+                                        />
+                                    ) }
+                                    { saveError && (
+                                        <div>
+                                            { saveError.toString() }
+                                        </div>
+                                    ) }
+                                    { saveResult && (
+                                        <div
+                                            className={
+                                                styles.pluginTemplatesGenerator_saveSuccessMessage
+                                            }
+                                        >
+                                            <FormattedMessage
+                                                id="templates-generator.Save.Success"
+                                            />
+                                        </div>
+                                    ) }
                                 </div>
                             </div>
                             <ImageConfigurator
                                 containerClassName={styles.pluginTemplatesGenerator_configurator}
-                                {...this.configuratorProps}
                                 translationDomain="templates-generator"
-                                textEffectDisabled={format === 'jpg'}
-                                authorEffectDisabled={format === 'jpg'}
+                                text="There is no elevator to success, you have to take the stairs."
+                                author="Quote Author"
+                                textEffectDisabled={format === 'jpeg'}
+                                authorEffectDisabled={format === 'jpeg'}
                                 onSubmit={this.handleConfiguratorChange}
                             />
                         </div>
                     ) }
 
-                    {(userLoading || genresLoading) && (
+                    { isPreviewTab && this.renderTemplates() }
+
+                    {(userLoading || genresLoading || saveLoading || templatesLoading) && (
                         <div className={styles.pluginTemplatesGenerator_loading}>
                             <LoadingIndicator />
                         </div>
                     )}
-                    { userError || genresError }
+                    { userError && (
+                        <div>
+                            { userError.toString() }
+                        </div>
+                    ) }
+                    { genresError && (
+                        <div>
+                            { genresError.toString() }
+                        </div>
+                    ) }
+                    { templatesError && (
+                        <div>
+                            { templatesError.toString() }
+                        </div>
+                    ) }
                 </div>
             </ContainerFluid>
         );
@@ -308,4 +579,15 @@ App.propTypes = {
     uploadError: PropTypes.object,
     uploadResult: PropTypes.string,
     upload: PropTypes.func.isRequired,
+    clearUploadResult: PropTypes.func.isRequired,
+    saveLoading: PropTypes.bool.isRequired,
+    saveError: PropTypes.object,
+    saveResult: PropTypes.object,
+    save: PropTypes.func.isRequired,
+    clearSaveResult: PropTypes.func.isRequired,
+    getTemplates: PropTypes.func.isRequired,
+    templates: PropTypes.arrayOf(PropTypes.object).isRequired,
+    templatesLoading: PropTypes.bool.isRequired,
+    templatesError: PropTypes.object,
+    removeTemplate: PropTypes.func.isRequired,
 };

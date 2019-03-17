@@ -98,19 +98,132 @@
   width: 500px;
 }
 
+.pluginTemplatesGenerator_configuratorResultContainer {
+  position: relative;
+  min-height: 100px;
+}
+
 .pluginTemplatesGenerator_configurator {
   flex: 1;
   margin-left: 20px;
 }
 
 .pluginTemplatesGenerator_configuratorButtons {
+  margin-top: 10px;
+  text-align: center;
+}
+
+.pluginTemplatesGenerator_configuratorButtonsHead {
   display: flex;
   justify-content: space-between;
-  margin-top: 10px;
 }
 
 .pluginTemplatesGenerator_configuratorClear {
   margin: 0;
   border: 0.1rem solid #F64D0A;
   color: #F64D0A;
+}
+
+.pluginTemplatesGenerator_saveButton {
+  margin-top: 20px;
+  padding: 5px 10px 6px;
+  height: auto;
+  font-size: 20px;
+  border-radius: 5px;
+}
+
+.pluginTemplatesGenerator_canvasLoading {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(255, 255, 255, 0.5);
+}
+
+.pluginTemplatesGenerator_saveSuccessMessage {
+  font-size: 20px;
+  color: #2DD210;
+}
+
+.pluginTemplatesGenerator_tabs {
+  display: flex;
+  margin-bottom: 20px;
+  border-bottom: 1px solid #CCC;
+}
+
+.pluginTemplatesGenerator_tab {
+  padding: 5px 20px;
+  border: 1px solid #CCC;
+  border-bottom: 0;
+  border-radius: 5px 5px 0 0;
+  margin: 5px 0 -1px 15px;
+  background-color: #FAFAFB;
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: bold;
+}
+
+.pluginTemplatesGenerator_tabActive {
+  padding: 7px 20px 5px;
+  margin-top: -2px;
+  background-color: #FFF;
+  cursor: default;
+}
+
+.pluginTemplatesGenerator_previewContainer {
+  display: flex;
+}
+
+.pluginTemplatesGenerator_previewContainerItem {
+  position: relative;
+  margin: 0 0 10px 10px;
+}
+
+.pluginTemplatesGenerator_previewContainerItemCont {
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, 0.5);
+  color: #FFF;
+  text-align: center;
+  font-size: 20px;
+  white-space: nowrap;
+}
+
+.pluginTemplatesGenerator_previewContainerItem:hover .pluginTemplatesGenerator_previewContainerItemCont {
+  display: flex;
+}
+
+.pluginTemplatesGenerator_previewContainerItemCont a {
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 10;
+}
+
+.pluginTemplatesGenerator_previewContainerButton {
+  position: absolute;
+  bottom: 100%;
+  margin: 0;
+  right: 0;
+  border: 0.1rem solid #F64D0A;
+  color: #F64D0A;
+}
+
+.pluginTemplatesGenerator_previewContainerLoading {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
 }

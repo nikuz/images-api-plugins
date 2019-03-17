@@ -1,7 +1,7 @@
 
 const fs = require('fs');
 const request = require('request');
-const gm = require('gm').subClass({ imageMagick: true });
+const gm = require('gm');
 
 module.exports = {
     upload: async (files, size, genre, host, authorization) => {

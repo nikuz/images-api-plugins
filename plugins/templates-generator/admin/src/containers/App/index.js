@@ -14,6 +14,11 @@ import {
     clearStore,
     genresLoadingRequest,
     uploadRequest,
+    clearUploadResult,
+    saveRequest,
+    clearSaveResult,
+    getTemplatesRequest,
+    removeTemplateRequest,
 } from './actions';
 
 import {
@@ -26,6 +31,12 @@ import {
     getUploadLoading,
     getUploadError,
     getUploadResult,
+    getSaveLoading,
+    getSaveError,
+    getSaveResult,
+    getTemplatesLoading,
+    getTemplatesError,
+    getTemplates,
 } from './selectors';
 
 import reducer from './reducer';
@@ -37,6 +48,11 @@ const mapDispatchToProps = dispatch => bindActionCreators(
         clearStore,
         getGenres: genresLoadingRequest,
         upload: uploadRequest,
+        clearUploadResult,
+        save: saveRequest,
+        clearSaveResult,
+        getTemplates: getTemplatesRequest,
+        removeTemplate: removeTemplateRequest,
     },
     dispatch
 );
@@ -51,6 +67,12 @@ const mapStateToProps = createStructuredSelector({
     uploadLoading: getUploadLoading(),
     uploadError: getUploadError(),
     uploadResult: getUploadResult(),
+    saveLoading: getSaveLoading(),
+    saveError: getSaveError(),
+    saveResult: getSaveResult(),
+    templatesLoading: getTemplatesLoading(),
+    templatesError: getTemplatesError(),
+    templates: getTemplates(),
 });
 
 const withConnect = connect(mapStateToProps, mapDispatchToProps);
