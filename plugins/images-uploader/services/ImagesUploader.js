@@ -77,7 +77,7 @@ module.exports = {
                         authorization,
                     },
                     formData: {
-                        url: fileUploadResult.url,
+                        url: `/uploads/${fileUploadResult.hash}${fileUploadResult.ext}`,
                         genre,
                     },
                 }, (err) => {

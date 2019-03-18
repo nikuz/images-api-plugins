@@ -154,6 +154,7 @@ export function* removeTemplate(action) {
 
         if (file && template) {
             yield put(removeTemplateSuccess(template));
+            strapi.notification.success('templates-generator.Preview.Remove-Success');
         } else {
             yield put(removeTemplateError(action.payload.templateId));
         }

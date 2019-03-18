@@ -46,15 +46,15 @@ export default class App extends React.Component {
     handleTabSelection = (tab) => {
         this.setState({ tab });
         if (tab === 'preview') {
-            this.getTemplates();
+            this.getTemplates(true);
         }
     };
 
-    getTemplates = () => {
+    getTemplates = (force) => {
         const { genre } = this.state;
         const { templates } = this.props;
 
-        if (templates.length) {
+        if (templates.length && !force) {
             return;
         }
 
@@ -201,14 +201,9 @@ export default class App extends React.Component {
     };
 
     renderTemplates = () => {
-        const {
-            genre,
-            format,
-        } = this.state;
+        const { genre } = this.state;
         const { templates } = this.props;
-        const filteredTemplates = templates.filter(item => (
-            item.format === format && item.genre.id === genre
-        ));
+        const filteredTemplates = templates.filter(item => (item.genre.id === genre));
         const size = 300;
 
         return (
@@ -220,7 +215,7 @@ export default class App extends React.Component {
                             key={item.id}
                             className={styles.pluginTemplatesGenerator_previewContainerItem}
                         >
-                            {format === 'mp4' && (
+                            {item.format === 'mp4' && (
                                 <video
                                     width={`${size}px`}
                                     autoPlay
@@ -229,7 +224,7 @@ export default class App extends React.Component {
                                     <source type="video/mp4" src={url} />
                                 </video>
                             )}
-                            {format !== 'mp4' && (
+                            {item.format !== 'mp4' && (
                                 <img
                                     src={url}
                                     width={`${size}px`}
@@ -242,6 +237,11 @@ export default class App extends React.Component {
                                         styles.pluginTemplatesGenerator_previewContainerItemCont
                                     }
                                 >
+                                    <div>
+                                        <FormattedMessage id="templates-generator.Preview.Format" />
+                                        :&nbsp;
+                                        {item.format}
+                                    </div>
                                     <div>
                                         <FormattedMessage id="templates-generator.Preview.Filter" />
                                         :&nbsp;
@@ -311,6 +311,10 @@ export default class App extends React.Component {
         const selectedGenre = genres.find(item => item.id === genre);
         const isPreviewTab = tab === 'preview';
 
+        const parametersContainerClassName = cn(
+            styles.pluginTemplatesGenerator_parametersContainer,
+            isPreviewTab && styles.pluginTemplatesGenerator_parametersContainerPreview
+        );
         const fileLoaderContainerClassName = cn(
             styles.pluginTemplatesGenerator_fileLoaderContainer,
             isDragging && styles.pluginTemplatesGenerator_fileLoaderContainerHover
@@ -354,7 +358,7 @@ export default class App extends React.Component {
                         </div>
                     </div>
 
-                    <div className={styles.pluginTemplatesGenerator_parametersContainer}>
+                    <div className={parametersContainerClassName}>
                         { !isPreviewTab && (
                             <div>
                                 <h3 className={styles.pluginTemplatesGenerator_cropSelectorTitle}>
@@ -375,20 +379,26 @@ export default class App extends React.Component {
                                 </div>
                             </div>
                         ) }
-                        <div>
-                            <h3 className={styles.pluginTemplatesGenerator_cropSelectorTitle}>
-                                <FormattedMessage id="templates-generator.Format.title" />
-                            </h3>
-                            <div className={styles.pluginTemplatesGenerator_cropSelectorContainer}>
-                                <InputSelect
-                                    onChange={this.handleFormatChange}
-                                    name="format"
-                                    value={format}
-                                    selectOptions={['jpeg', 'gif', 'mp4']}
-                                    style={selectStyle}
-                                />
+                        { !isPreviewTab && (
+                            <div>
+                                <h3 className={styles.pluginTemplatesGenerator_cropSelectorTitle}>
+                                    <FormattedMessage id="templates-generator.Format.title" />
+                                </h3>
+                                <div
+                                    className={
+                                        styles.pluginTemplatesGenerator_cropSelectorContainer
+                                    }
+                                >
+                                    <InputSelect
+                                        onChange={this.handleFormatChange}
+                                        name="format"
+                                        value={format}
+                                        selectOptions={['jpeg', 'gif', 'mp4']}
+                                        style={selectStyle}
+                                    />
+                                </div>
                             </div>
-                        </div>
+                        ) }
                         <div>
                             <h3 className={styles.pluginImagesUploader_cropSelectorTitle}>
                                 <FormattedMessage id="templates-generator.Genre.title" />
@@ -522,6 +532,7 @@ export default class App extends React.Component {
                                 </div>
                             </div>
                             <ImageConfigurator
+                                {...this.state.configurator}
                                 containerClassName={styles.pluginTemplatesGenerator_configurator}
                                 translationDomain="templates-generator"
                                 text="There is no elevator to success, you have to take the stairs."

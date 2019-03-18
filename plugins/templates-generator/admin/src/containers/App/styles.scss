@@ -8,6 +8,10 @@
   justify-content: space-between;
 }
 
+.pluginTemplatesGenerator_parametersContainerPreview {
+  justify-content: flex-end;
+}
+
 .pluginTemplatesGenerator_cropSelectorTitle {
   margin: 0;
   font-size: 18px;
@@ -176,6 +180,8 @@
 
 .pluginTemplatesGenerator_previewContainer {
   display: flex;
+  flex-wrap: wrap;
+  padding-top: 20px;
 }
 
 .pluginTemplatesGenerator_previewContainerItem {
@@ -192,10 +198,11 @@
   display: none;
   flex-direction: column;
   justify-content: center;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.7);
   color: #FFF;
   text-align: center;
   font-size: 20px;
+  font-weight: bold;
   white-space: nowrap;
 }
 
@@ -214,9 +221,10 @@
 
 .pluginTemplatesGenerator_previewContainerButton {
   position: absolute;
-  bottom: 100%;
+  top: 0;
   margin: 0;
   right: 0;
+  background: #FFF;
   border: 0.1rem solid #F64D0A;
   color: #F64D0A;
 }

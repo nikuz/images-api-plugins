@@ -51,8 +51,10 @@
   "Tab.Upload": "Upload",
   "Tab.Preview": "Preview",
   "Preview.Select-Genre-Error": "Please select genre",
-  "Preview.Filter": "Filter",
+  "Preview.Format": "Format",
+  "Preview.Filter": "Image Filter",
   "Preview.TextFontFamily": "Text font",
   "Preview.AuthorFontFamily": "Author font",
-  "Preview.Remove": "Remove"
+  "Preview.Remove": "Remove",
+  "Preview.Remove-Success": "Template successfully removed"
 }

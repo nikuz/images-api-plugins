@@ -57,7 +57,7 @@ module.exports = {
                     },
                     formData: {
                         ...fields,
-                        image: fileUploadResult.url.replace(`http://${host}`, ''),
+                        image: `/uploads/${fileUploadResult.hash}${fileUploadResult.ext}`,
                         fileId: fileUploadResult.id,
                         system: 'true',
                     },
