@@ -1,0 +1,13 @@
+{
+  "Title": "Examples",
+  "Description": "Here you can get example for specific template",
+  "Select-Genre-Error": "Please select genre",
+  "Format": "Format",
+  "Filter": "Image Filter",
+  "TextFontFamily": "Text font",
+  "AuthorFontFamily": "Author font",
+  "Genre.title": "Select genre",
+  "Format.title": "Format",
+  "Preview.Title": "Preview",
+  "Preview.No-Preview-Available": "No Preview Available"
+}

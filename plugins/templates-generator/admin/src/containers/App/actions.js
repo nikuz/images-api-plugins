@@ -90,8 +90,9 @@ export const clearSaveResult = () => ({
     type: SAVE_CLEAR_RESULT,
 });
 
-export const getTemplatesRequest = () => ({
+export const getTemplatesRequest = genre => ({
     type: TEMPLATES_REQUEST,
+    payload: genre,
 });
 
 export const getTemplatesSuccess = result => ({

@@ -46,24 +46,19 @@ export default class App extends React.Component {
     handleTabSelection = (tab) => {
         this.setState({ tab });
         if (tab === 'preview') {
-            this.getTemplates(true);
+            this.getTemplates();
         }
     };
 
-    getTemplates = (force) => {
+    getTemplates = () => {
         const { genre } = this.state;
-        const { templates } = this.props;
-
-        if (templates.length && !force) {
-            return;
-        }
 
         if (genre === '') {
             strapi.notification.error('templates-generator.Preview.Select-Genre-Error');
             return;
         }
 
-        this.props.getTemplates();
+        this.props.getTemplates(genre);
     };
 
     handleDragEnter = () => this.setState({ isDragging: true });

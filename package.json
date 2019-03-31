@@ -9,7 +9,7 @@
     "setup:plugins": "cd admin && npm run setup ---plugins",
     "start": "node server.js",
     "strapi": "node_modules/strapi/bin/strapi.js",
-    "eslint": "eslint config/**/*.js plugins/pack-generator plugins/quotes plugins/images-uploader plugins/templates-generator -f table",
+    "eslint": "eslint config/**/*.js plugins/pack-generator plugins/quotes plugins/images-uploader plugins/templates-generator plugins/examples -f table",
     "postinstall": "node node_modules/strapi/lib/utils/post-install.js"
   },
   "devDependencies": {

@@ -127,9 +127,9 @@ function* save(action) {
     }
 }
 
-export function* getTemplates() {
+export function* getTemplates(genre) {
     try {
-        const requestURL = '/templates?_limit=1000';
+        const requestURL = `/templates?genre=${genre.payload}`;
         const response = yield call(request, requestURL, { method: 'GET' });
 
         if (response) {

@@ -1,0 +1,73 @@
+
+.pluginExamples_container {
+  position: relative;
+}
+
+.pluginExamples_parametersContainer {
+  display: flex;
+  justify-content: space-between;
+}
+
+.pluginExamples_parametersContainerPreview {
+  justify-content: flex-end;
+}
+
+.pluginExamples_cropSelectorTitle {
+  margin: 0;
+  font-size: 18px;
+}
+
+.pluginExamples_cropSelectorContainer {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 3em;
+}
+
+.pluginExamples_loading {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  padding-top: 100px;
+  background-color: rgba(255, 255, 255, 0.5);
+
+  > div > div {
+    width: 50px;
+    height: 50px;
+  }
+}
+
+.pluginExamples_previewContainer {
+  display: flex;
+  flex-wrap: wrap;
+  padding-top: 20px;
+}
+
+.pluginExamples_previewContainerItem {
+  position: relative;
+  margin: 0 0 10px 10px;
+  cursor: pointer;
+}
+
+.pluginExamples_previewContainerItemCont {
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, 0.7);
+  color: #FFF;
+  text-align: center;
+  font-size: 20px;
+  font-weight: bold;
+  white-space: nowrap;
+}
+
+.pluginExamples_previewContainerItem:hover .pluginExamples_previewContainerItemCont {
+  display: flex;
+}
+
