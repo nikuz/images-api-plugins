@@ -70,6 +70,16 @@ export default class App extends React.Component {
 
     handleDragLeave = () => this.setState({ isDragging: false });
 
+    handleFiles = (file) => {
+        this.setState({
+            image: file,
+        });
+    };
+
+    handleFileFieldChange = (evt) => {
+        this.handleFiles(evt.target.files[0]);
+    };
+
     handleDrop = (evt) => {
         evt.preventDefault();
         this.setState({ isDragging: false });
@@ -84,9 +94,7 @@ export default class App extends React.Component {
 
         const strapi = window.strapi;
         if (suitableFile) {
-            this.setState({
-                image: suitableFile,
-            });
+            this.handleFiles(suitableFile);
         } else if (strapi) {
             strapi.notification.error('templates-generator.File.format-error');
         }
@@ -157,6 +165,7 @@ export default class App extends React.Component {
             image: null,
         });
         this.props.clearStore();
+        this.props.getGenres();
     };
 
     handleSave = () => {
@@ -416,16 +425,7 @@ export default class App extends React.Component {
                     </div>
 
                     { !image && !isPreviewTab && (
-                        <label
-                            className={fileLoaderContainerClassName}
-                            onDragEnter={this.handleDragEnter}
-                            onDragOver={(e) => {
-                                e.preventDefault();
-                                e.stopPropagation();
-                            }}
-                            onDrop={this.handleDrop}
-                            htmlFor="images-upload-files"
-                        >
+                        <div className={fileLoaderContainerClassName}>
                             <div>
                                 <div className={styles.icon}>
                                     <Ico icoType="image" />
@@ -448,7 +448,17 @@ export default class App extends React.Component {
                                     accept=".jpg,.jpeg"
                                 />
                             </div>
-                        </label>
+                            <label
+                                className={styles.pluginTemplatesGenerator_fileLoaderLabel}
+                                onDragEnter={this.handleDragEnter}
+                                onDragOver={(e) => {
+                                    e.preventDefault();
+                                    e.stopPropagation();
+                                }}
+                                onDrop={this.handleDrop}
+                                htmlFor="images-upload-files"
+                            />
+                        </div>
                     ) }
                     { image && !isPreviewTab && (
                         <div className={styles.pluginTemplatesGenerator_configuratorContainer}>
@@ -532,11 +542,11 @@ export default class App extends React.Component {
                                 </div>
                             </div>
                             <ImageConfigurator
-                                {...this.state.configurator}
                                 containerClassName={styles.pluginTemplatesGenerator_configurator}
                                 translationDomain="templates-generator"
                                 text="There is no elevator to success, you have to take the stairs."
                                 author="Quote Author"
+                                {...this.state.configurator}
                                 textEffectDisabled={format === 'jpeg'}
                                 authorEffectDisabled={format === 'jpeg'}
                                 onSubmit={this.handleConfiguratorChange}

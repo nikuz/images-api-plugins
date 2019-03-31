@@ -129,7 +129,7 @@ function* save(action) {
 
 export function* getTemplates() {
     try {
-        const requestURL = '/templates';
+        const requestURL = '/templates?_limit=1000';
         const response = yield call(request, requestURL, { method: 'GET' });
 
         if (response) {

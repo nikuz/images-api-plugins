@@ -49,10 +49,6 @@
   border-radius: 2em;
   text-align: center;
 
-  &:hover {
-    cursor: pointer;
-  }
-
   input {
     display: none;
   }
@@ -79,6 +75,16 @@
       color: #1C5DE7;
     }
   }
+}
+
+.pluginTemplatesGenerator_fileLoaderLabel {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 20;
+  cursor: pointer;
 }
 
 .pluginTemplatesGenerator_fileLoaderContainerHover {
@@ -227,6 +233,7 @@
   background: #FFF;
   border: 0.1rem solid #F64D0A;
   color: #F64D0A;
+  z-index: 11;
 }
 
 .pluginTemplatesGenerator_previewContainerLoading {
