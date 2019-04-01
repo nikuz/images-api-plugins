@@ -14,6 +14,7 @@ import {
     genresLoadingRequest,
     getTemplatesRequest,
     getExampleRequest,
+    clearExample,
 } from './actions';
 
 import {
@@ -31,16 +32,6 @@ import {
 import reducer from './reducer';
 import saga from './saga';
 
-const mapDispatchToProps = dispatch => bindActionCreators(
-    {
-        clearStore,
-        getGenres: genresLoadingRequest,
-        getTemplates: getTemplatesRequest,
-        getExample: getExampleRequest,
-    },
-    dispatch
-);
-
 const mapStateToProps = createStructuredSelector({
     genres: getGenres(),
     genresLoading: getGenresLoading(),
@@ -52,6 +43,17 @@ const mapStateToProps = createStructuredSelector({
     exampleLoading: getExampleLoading(),
     exampleError: getExampleError(),
 });
+
+const mapDispatchToProps = dispatch => bindActionCreators(
+    {
+        clearStore,
+        getGenres: genresLoadingRequest,
+        getTemplates: getTemplatesRequest,
+        getExample: getExampleRequest,
+        clearExample,
+    },
+    dispatch
+);
 
 const withConnect = connect(mapStateToProps, mapDispatchToProps);
 

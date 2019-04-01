@@ -11,6 +11,7 @@ const {
     EXAMPLE_REQUEST,
     EXAMPLE_SUCCESS,
     EXAMPLE_ERROR,
+    EXAMPLE_CLEAR,
     CLEAR_STORE,
 } = constants;
 
@@ -55,6 +56,11 @@ export const getExampleSuccess = result => ({
 
 export const getExampleError = error => ({
     type: EXAMPLE_ERROR,
+    payload: error,
+});
+
+export const clearExample = error => ({
+    type: EXAMPLE_CLEAR,
     payload: error,
 });
 

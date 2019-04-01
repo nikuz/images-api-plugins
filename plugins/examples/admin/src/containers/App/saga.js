@@ -59,7 +59,7 @@ export function* getTemplates(action) {
 
 export function* getExample(action) {
     try {
-        let requestURL = '/example/get?';
+        let requestURL = '/examples/get?';
         Object.keys(action.payload).forEach((key) => {
             requestURL += `${key}=${encodeURIComponent(action.payload[key])}&`;
         });

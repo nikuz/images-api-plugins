@@ -1,17 +1,13 @@
 
-const fs = require('fs');
 const request = require('request');
 
 module.exports = {
-    get: async (host, authorization, file, croppedFilePath, genre) => (
+    get: async props => (
         new Promise((resolve, reject) => {
             request.post({
-                url: `http://${host}/upload`,
-                headers: {
-                    authorization,
-                },
+                url: 'http://localhost:5790/',
                 formData: {
-                    files: fs.createReadStream(croppedFilePath),
+                    ...props,
                 },
             }, (err, httpResponse, body) => {
                 if (err) {
@@ -19,30 +15,11 @@ module.exports = {
                     return;
                 }
 
-                resolve(JSON.parse(body)[0]);
-                fs.unlinkSync(file.path);
-                fs.unlinkSync(croppedFilePath);
-            });
-        }).then(fileUploadResult => (
-            new Promise((resolve, reject) => {
-                request.post({
-                    url: `http://${host}/content-manager/explorer/image`,
-                    headers: {
-                        authorization,
-                    },
-                    formData: {
-                        url: `/uploads/${fileUploadResult.hash}${fileUploadResult.ext}`,
-                        genre,
-                    },
-                }, (err) => {
-                    if (err) {
-                        reject(err);
-                        return;
-                    }
-
-                    resolve(fileUploadResult);
+                resolve({
+                    code: httpResponse.statusCode,
+                    body,
                 });
-            })
-        ))
+            });
+        })
     ),
 };

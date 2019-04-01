@@ -12,6 +12,8 @@ import InputSelect from 'components/InputSelect';
 // Styles
 import styles from './styles.scss';
 
+const exampleSize = 500;
+
 export default class App extends React.Component {
     previewVideoEl;
 
@@ -48,12 +50,14 @@ export default class App extends React.Component {
 
     handleGenreChange = (e) => {
         const { genres } = this.props;
+        this.props.clearExample();
         this.setState({
             genre: genres.find(item => item.name === e.target.value).id,
         });
     };
 
     handleFormatChange = (e) => {
+        this.props.clearExample();
         this.setState({
             format: e.target.value,
         });
@@ -63,7 +67,13 @@ export default class App extends React.Component {
         this.setState({
             template: template.id,
         });
-        this.props.getExample(template);
+        this.props.clearExample();
+        this.props.getExample({
+            ...template,
+            width: exampleSize,
+            height: exampleSize,
+            animate: template.format !== 'jpeg',
+        });
     };
 
     renderTemplates = () => {
@@ -154,7 +164,6 @@ export default class App extends React.Component {
             format,
         } = this.state;
         const selectedGenre = genres.find(item => item.id === genre);
-        const exampleSize = 500;
         const selectStyle = { minWidth: '170px', maxWidth: '200px' };
 
         return (
@@ -214,22 +223,25 @@ export default class App extends React.Component {
                         {!example && (
                             <FormattedMessage id="examples.Preview.No-Preview-Available" />
                         )}
-                        {example && format === 'mp4' && (
-                            <video
-                                width={`${exampleSize}px`}
-                                autoPlay
-                                controls
-                            >
-                                <source type="video/mp4" src={example} />
-                            </video>
-                        )}
-                        {example && format !== 'mp4' && (
-                            <img
-                                src={example}
-                                width={`${exampleSize}px`}
-                                alt=""
-                            />
-                        )}
+                        <div style={{ height: `${exampleSize}px`, marginBottom: '2rem' }}>
+                            {example && format === 'mp4' && (
+                                <video
+                                    width={`${exampleSize}px`}
+                                    autoPlay
+                                    controls
+                                >
+                                    <source type="video/mp4" src={example} />
+                                </video>
+                            )}
+                            {example && format !== 'mp4' && (
+                                <img
+                                    src={example}
+                                    width={`${exampleSize}px`}
+                                    alt=""
+                                />
+                            )}
+                            { exampleLoading && <LoadingIndicator /> }
+                        </div>
                     </div>
 
                     { (genresLoading || templatesLoading || exampleLoading) && (
@@ -271,9 +283,10 @@ App.propTypes = {
     templates: PropTypes.arrayOf(PropTypes.object).isRequired,
     templatesLoading: PropTypes.bool.isRequired,
     templatesError: PropTypes.object,
-    example: PropTypes.object,
+    example: PropTypes.string,
     getExample: PropTypes.func.isRequired,
     exampleLoading: PropTypes.bool.isRequired,
     exampleError: PropTypes.object,
+    clearExample: PropTypes.func.isRequired,
     clearStore: PropTypes.func.isRequired,
 };

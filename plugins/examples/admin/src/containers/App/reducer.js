@@ -11,6 +11,7 @@ const {
     EXAMPLE_REQUEST,
     EXAMPLE_SUCCESS,
     EXAMPLE_ERROR,
+    EXAMPLE_CLEAR,
     CLEAR_STORE,
 } = constants;
 
@@ -82,7 +83,7 @@ function templatesGeneratorReducer(state = initialState, action) {
             return {
                 ...state,
                 exampleLoading: false,
-                example: payload,
+                example: payload && payload.example,
             };
 
         case EXAMPLE_ERROR:
@@ -90,6 +91,12 @@ function templatesGeneratorReducer(state = initialState, action) {
                 ...state,
                 exampleLoading: false,
                 exampleError: payload,
+            };
+
+        case EXAMPLE_CLEAR:
+            return {
+                ...state,
+                example: null,
             };
 
         case CLEAR_STORE:
