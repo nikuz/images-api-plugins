@@ -8,6 +8,9 @@ const {
     USER_LOADING_REQUEST,
     USER_LOADING_SUCCESS,
     USER_LOADING_ERROR,
+    GENRES_LOADING_REQUEST,
+    GENRES_LOADING_SUCCESS,
+    GENRES_LOADING_ERROR,
     QUOTES_SET,
     QUOTE_REMOVE,
     QUOTES_START_UPLOAD,
@@ -43,6 +46,20 @@ export const userLoadingSuccess = data => ({
 
 export const userLoadingError = () => ({
     type: USER_LOADING_ERROR,
+});
+
+export const genresLoadingRequest = () => ({
+    type: GENRES_LOADING_REQUEST,
+});
+
+export const genresLoadingSuccess = data => ({
+    type: GENRES_LOADING_SUCCESS,
+    payload: data,
+});
+
+export const genresLoadingError = error => ({
+    type: GENRES_LOADING_ERROR,
+    payload: error,
 });
 
 export const setQuotes = (quotesNew, quotesDuplicates) => ({

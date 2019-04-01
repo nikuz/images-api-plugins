@@ -23,6 +23,7 @@ export default class App extends React.PureComponent {
     componentDidMount() {
         this.props.quotesLoadingRequest();
         this.props.userLoadingRequest();
+        this.props.getGenres();
     }
 
     componentDidUpdate(prevProps) {
@@ -33,6 +34,7 @@ export default class App extends React.PureComponent {
             uploadingDone,
             quotesError,
             userError,
+            genresError,
         } = this.props;
         const strapi = window.strapi;
 
@@ -58,6 +60,9 @@ export default class App extends React.PureComponent {
         if (!prevProps.userError && userError && strapi) {
             strapi.notification.error('quotes.User.error');
         }
+        if (!prevProps.genresError && genresError && strapi) {
+            strapi.notification.error('quotes.Genres.error');
+        }
     }
 
     componentWillUnmount() {
@@ -65,7 +70,10 @@ export default class App extends React.PureComponent {
     }
 
     readFile = (file) => {
-        const { quotesExiting } = this.props;
+        const {
+            quotesExiting,
+            genres,
+        } = this.props;
         const reader = new FileReader();
 
         // Closure to capture the file information.
@@ -78,13 +86,18 @@ export default class App extends React.PureComponent {
                     const data = line.split(/\t/);
                     const text = data[0];
                     const author = data[1];
-                    const genre = data[2];
+                    let genre = data[2] || 'inspitarion';
+                    const genreObject = genres.find(item => item.name === genre);
+                    if (genreObject) {
+                        genre = genreObject.id;
+                    }
 
                     if (author !== undefined) {
                         quotesNew.push({
                             author: author.trim(),
                             text: text.trim(),
-                            genre: genre || 'inspitarion',
+                            genre,
+                            genreName: genreObject && genreObject.name,
                             loading: false,
                             uploaded: false,
                             error: null,
@@ -158,7 +171,7 @@ export default class App extends React.PureComponent {
                 <i>{quote.author}</i>
                 <span className={styles.pluginQuotesLoader_quotesListItemGenre}>
                     &nbsp;&ndash;&nbsp;
-                    {quote.genre}
+                    {quote.genreName}
                 </span>
 
                 {!quote.loading && !quote.uploaded && !quote.error && !duplicate && (
@@ -200,11 +213,13 @@ export default class App extends React.PureComponent {
         const {
             quotesLoading,
             userLoading,
+            genresLoading,
             uploadLoading,
             quotesNew,
             quotesDuplicates,
         } = this.props;
         const { isDraging } = this.state;
+        const notUploadedQuote = quotesNew.find(item => item.uploaded === false);
         const fileLoaderContainerClassName = cn(
             styles.pluginQuotesLoader_fileLoaderContainer,
             isDraging && styles.pluginQuotesLoader_fileLoaderContainerHover
@@ -266,12 +281,14 @@ export default class App extends React.PureComponent {
                                     id: 'quotes.New.title',
                                 }}
                             />
-                            <Button
-                                label="quotes.Upload.button"
-                                type="submit"
-                                primary
-                                loader={uploadLoading}
-                            />
+                            { notUploadedQuote && (
+                                <Button
+                                    label="quotes.Upload.button"
+                                    type="submit"
+                                    primary
+                                    loader={uploadLoading}
+                                />
+                            ) }
                         </form>
                     )}
                     <ol className={styles.pluginQuotesLoader_quotesList}>
@@ -289,7 +306,7 @@ export default class App extends React.PureComponent {
                         {quotesDuplicates.map((item, key) => this.renderQuote(item, key, true))}
                     </ol>
 
-                    {(quotesLoading || userLoading) && (
+                    {(quotesLoading || userLoading || genresLoading) && (
                         <div className={styles.pluginQuotesLoader_loading}>
                             <LoadingIndicator />
                         </div>
@@ -309,6 +326,10 @@ App.propTypes = {
     quotesError: PropTypes.bool,
     userLoading: PropTypes.bool.isRequired,
     userError: PropTypes.bool,
+    genres: PropTypes.arrayOf(PropTypes.object).isRequired,
+    getGenres: PropTypes.func.isRequired,
+    genresLoading: PropTypes.bool.isRequired,
+    genresError: PropTypes.object,
     quotesExiting: PropTypes.array.isRequired,
     quotesNew: PropTypes.array.isRequired,
     quotesDuplicates: PropTypes.array.isRequired,

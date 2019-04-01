@@ -9,5 +9,6 @@
   "Uploading.done": "All quotes uploaded",
   "Quotes.error": "Can't get exiting quotes",
   "User.error": "Can't get current user",
+  "Genres.error": "Can't get genres",
   "File.format-error": "Format error. Only .tsv files allowed"
 }

@@ -18,6 +18,8 @@ import {
     quotesLoadingError,
     quoteUploadSuccess,
     quoteUploadError,
+    genresLoadingError,
+    genresLoadingSuccess,
 } from './actions';
 import {
     getUploadingQuote,
@@ -28,6 +30,7 @@ import constants from './constants';
 const {
     QUOTES_LOADING_REQUEST,
     USER_LOADING_REQUEST,
+    GENRES_LOADING_REQUEST,
     QUOTE_UPLOADING_REQUEST,
 } = constants;
 
@@ -48,7 +51,7 @@ export function* getCurrentUser() {
 
 export function* quotesGetExiting() {
     try {
-        const requestURL = '/content-manager/explorer/quotes';
+        const requestURL = '/content-manager/explorer/quotes?_limit=2000';
         const response = yield call(request, requestURL, { method: 'GET' });
 
         if (response) {
@@ -58,6 +61,21 @@ export function* quotesGetExiting() {
         }
     } catch (e) {
         yield put(quotesLoadingError(e));
+    }
+}
+
+export function* getGenres() {
+    try {
+        const requestURL = '/content-manager/explorer/genre';
+        const response = yield call(request, requestURL, { method: 'GET' });
+
+        if (response) {
+            yield put(genresLoadingSuccess(response));
+        } else {
+            yield put(genresLoadingError());
+        }
+    } catch (e) {
+        yield put(genresLoadingError(e));
     }
 }
 
@@ -96,12 +114,14 @@ export function* uploadQuoteItem() {
 export function* defaultSaga() {
     const getExitingQuotes = yield fork(takeLatest, QUOTES_LOADING_REQUEST, quotesGetExiting);
     const getUserHandler = yield fork(takeLatest, USER_LOADING_REQUEST, getCurrentUser);
+    const getGenresRequest = yield fork(takeLatest, GENRES_LOADING_REQUEST, getGenres);
     const uploadQuote = yield fork(takeLatest, QUOTE_UPLOADING_REQUEST, uploadQuoteItem);
 
     // Suspend execution until location changes
     yield take(LOCATION_CHANGE);
     yield cancel(getExitingQuotes);
     yield cancel(getUserHandler);
+    yield cancel(getGenresRequest);
     yield cancel(uploadQuote);
 }
 

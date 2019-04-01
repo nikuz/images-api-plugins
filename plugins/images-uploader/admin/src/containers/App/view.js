@@ -446,16 +446,13 @@ export default class App extends React.Component {
                                     id: 'images-uploader.Images-List.title',
                                 }}
                             />
-                            { !uploadLoading && notUploadedImage && (
+                            { notUploadedImage && (
                                 <Button
                                     label="images-uploader.Images-List.upload"
                                     type="submit"
                                     primary
-                                    loader={loading}
+                                    loader={uploadLoading}
                                 />
-                            ) }
-                            { uploadLoading && (
-                                <LoadingBar />
                             ) }
                         </form>
                     ) }

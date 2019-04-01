@@ -26,6 +26,18 @@ const isUserLoading = () => (
     createSelector(selectDomain(), substate => substate.userLoading)
 );
 
+const getGenres = () => (
+    createSelector(selectDomain(), substate => substate.genres)
+);
+
+const getGenresLoading = () => (
+    createSelector(selectDomain(), substate => substate.genresLoading)
+);
+
+const getGenresError = () => (
+    createSelector(selectDomain(), substate => substate.genresError)
+);
+
 const getNewQuotes = () => (
     createSelector(selectDomain(), substate => substate.quotesNew)
 );
@@ -59,6 +71,9 @@ export {
     getUser,
     isUserError,
     isUserLoading,
+    getGenres,
+    getGenresLoading,
+    getGenresError,
     getNewQuotes,
     getDuplicateQuotes,
     isUploadLoading,

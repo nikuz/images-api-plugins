@@ -8,6 +8,9 @@ const {
     USER_LOADING_REQUEST,
     USER_LOADING_SUCCESS,
     USER_LOADING_ERROR,
+    GENRES_LOADING_REQUEST,
+    GENRES_LOADING_SUCCESS,
+    GENRES_LOADING_ERROR,
     QUOTES_SET,
     QUOTE_REMOVE,
     QUOTES_START_UPLOAD,
@@ -27,6 +30,9 @@ const initialState = {
     quotesLoading: false,
     quotesSuccess: null,
     quotesError: null,
+    genresLoading: false,
+    genresError: null,
+    genres: [],
     quotesExiting: [],
     quotesNew: [],
     quotesDuplicates: [],
@@ -78,6 +84,27 @@ function quotesLoaderReducer(state = initialState, action) {
                 ...state,
                 quotesLoading: false,
                 quotesError: payload,
+            };
+
+        case GENRES_LOADING_REQUEST:
+            return {
+                ...state,
+                genresLoading: true,
+                genresError: null,
+            };
+
+        case GENRES_LOADING_SUCCESS:
+            return {
+                ...state,
+                genresLoading: false,
+                genres: payload,
+            };
+
+        case GENRES_LOADING_ERROR:
+            return {
+                ...state,
+                genresLoading: false,
+                genresError: payload,
             };
 
         case QUOTES_SET:
