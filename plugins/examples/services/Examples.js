@@ -11,6 +11,10 @@ module.exports = {
             formData.logo = fs.createReadStream(logo.path);
         }
 
+        Object.keys(formData).forEach((key) => {
+            formData[key] = String(formData[key]);
+        });
+
         return new Promise((resolve, reject) => {
             request.post({
                 url: 'http://localhost:5790/',
