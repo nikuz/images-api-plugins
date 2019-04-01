@@ -2,6 +2,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { FormattedMessage } from 'react-intl';
+import cn from 'classnames';
 
 import ContainerFluid from 'components/ContainerFluid';
 import PluginHeader from 'components/PluginHeader';
@@ -17,6 +18,7 @@ export default class App extends React.Component {
     state = {
         genre: '',
         format: 'jpeg',
+        template: '',
     };
 
     componentDidMount() {
@@ -58,23 +60,33 @@ export default class App extends React.Component {
     };
 
     handleGetExample = (template) => {
+        this.setState({
+            template: template.id,
+        });
         this.props.getExample(template);
     };
 
     renderTemplates = () => {
-        const { genre } = this.state;
+        const {
+            template,
+            format,
+        } = this.state;
         const { templates } = this.props;
-        const filteredTemplates = templates.filter(item => (item.genre.id === genre));
+        const filteredTemplates = templates.filter(item => (item.format === format));
         const size = 200;
 
         return (
             <div className={styles.pluginExamples_previewContainer}>
                 { filteredTemplates.map((item) => {
                     const url = `${strapi.backendURL}${item.image}`;
+                    const className = cn(
+                        styles.pluginExamples_previewContainerItem,
+                        item.id === template && styles.pluginExamples_previewContainerItemActive
+                    );
                     return (
                         <div
                             key={item.id}
-                            className={styles.pluginExamples_previewContainerItem}
+                            className={className}
                             onClick={() => this.handleGetExample(item)}
                         >
                             {item.format === 'mp4' && (

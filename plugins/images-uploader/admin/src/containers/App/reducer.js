@@ -4,7 +4,7 @@ import constants from './constants';
 const {
     GENRES_LOADING_REQUEST,
     GENRES_LOADING_SUCCESS,
-    GENRES_LOADING_ERROR,
+    GENRES_LOADING_FAILURE,
     FILES_SET,
     UPLOAD_START,
     UPLOAD_REQUEST,
@@ -12,6 +12,12 @@ const {
     UPLOAD_ERROR,
     UPLOAD_DONE,
     UPLOAD_CLEAR_STATE,
+    UPLOADED_IMAGES_REQUEST,
+    UPLOADED_IMAGES_SUCCESS,
+    UPLOADED_IMAGES_FAILURE,
+    REMOVE_IMAGE_REQUEST,
+    REMOVE_IMAGE_SUCCESS,
+    REMOVE_IMAGE_FAILURE,
     CLEAR_STORE,
 } = constants;
 
@@ -23,6 +29,9 @@ const initialState = {
     uploadLoading: false,
     uploadRequested: false,
     uploadingDone: false,
+    uploadedImages: [],
+    uploadedImagesLoading: false,
+    uploadedImagesError: null,
 };
 
 function packGeneratorReducer(state = initialState, action) {
@@ -41,7 +50,7 @@ function packGeneratorReducer(state = initialState, action) {
                 genres: payload,
             };
 
-        case GENRES_LOADING_ERROR:
+        case GENRES_LOADING_FAILURE:
             return {
                 ...state,
                 loading: false,
@@ -117,6 +126,67 @@ function packGeneratorReducer(state = initialState, action) {
                 ...state,
                 uploadingDone: false,
             };
+
+        case UPLOADED_IMAGES_REQUEST:
+            return {
+                ...state,
+                uploadedImagesLoading: true,
+            };
+
+        case UPLOADED_IMAGES_SUCCESS:
+            return {
+                ...state,
+                uploadedImages: payload,
+                uploadedImagesLoading: false,
+            };
+
+        case UPLOADED_IMAGES_FAILURE:
+            return {
+                ...state,
+                uploadedImagesError: payload,
+                uploadedImagesLoading: false,
+            };
+
+        case REMOVE_IMAGE_REQUEST: {
+            const images = state.uploadedImages.slice(0);
+            const removingImage = images.find(item => item.id === payload.imageId);
+            if (removingImage) {
+                removingImage.loading = true;
+            }
+            return {
+                ...state,
+                removeImageLoading: true,
+                uploadedImages: images,
+            };
+        }
+
+        case REMOVE_IMAGE_SUCCESS: {
+            const images = state.uploadedImages.slice(0);
+            const removingImage = images.findIndex(item => item.id === payload.imageId);
+            if (removingImage !== -1) {
+                images.splice(removingImage, 1);
+            }
+            return {
+                ...state,
+                removeImageLoading: false,
+                uploadedImages: images,
+            };
+        }
+
+        case REMOVE_IMAGE_FAILURE: {
+            const images = state.uploadedImages.slice(0);
+            const removingImage = images.find(item => item.id === payload.imageId);
+            if (removingImage) {
+                removingImage.loading = false;
+                removingImage.error = true;
+            }
+            return {
+                ...state,
+                removeImageLoading: false,
+                removeAllRequested: false,
+                uploadedImages: images,
+            };
+        }
 
         case CLEAR_STORE:
             return initialState;

@@ -7,14 +7,19 @@ import {
     fork,
     take,
     cancel,
+    all,
 } from 'redux-saga/effects';
 import request from 'utils/request';
 
 import {
     genresLoadingSuccess,
-    genresLoadingError,
+    genresLoadingFailure,
     uploadSuccess,
     uploadError,
+    getUploadedImagesSuccess,
+    getUploadedImagesFailure,
+    removeImageSuccess,
+    removeImageFailure,
 } from './actions';
 
 import constants from './constants';
@@ -22,6 +27,8 @@ import constants from './constants';
 const {
     GENRES_LOADING_REQUEST,
     UPLOAD_REQUEST,
+    UPLOADED_IMAGES_REQUEST,
+    REMOVE_IMAGE_REQUEST,
 } = constants;
 
 export function* getGenres() {
@@ -32,10 +39,10 @@ export function* getGenres() {
         if (response) {
             yield put(genresLoadingSuccess(response));
         } else {
-            yield put(genresLoadingError());
+            yield put(genresLoadingFailure());
         }
     } catch (e) {
-        yield put(genresLoadingError(e));
+        yield put(genresLoadingFailure(e));
     }
 }
 
@@ -69,12 +76,56 @@ function* uploadFile(action) {
     }
 }
 
+export function* getUploadedImages(action) {
+    try {
+        const requestURL = `/content-manager/explorer/image?genre=${action.payload}&_limit=2000`;
+        const response = yield call(request, requestURL, { method: 'GET' });
+
+        if (response) {
+            yield put(getUploadedImagesSuccess(response));
+        } else {
+            yield put(getUploadedImagesFailure());
+        }
+    } catch (e) {
+        yield put(getUploadedImagesFailure(e));
+    }
+}
+
+export function* removeImage(action) {
+    try {
+        const fileURL = `/upload/files/${action.payload.fileId}`;
+        const templateURL = `/content-manager/explorer/image/${action.payload.imageId}`;
+
+        const [file, image] = yield all([
+            call(request, fileURL, { method: 'DELETE' }),
+            call(request, templateURL, { method: 'DELETE' }),
+        ]);
+
+        if (file && image) {
+            yield put(removeImageSuccess(action.payload.imageId, image));
+            strapi.notification.success('images-uploader.Preview.Remove-Success');
+        } else {
+            yield put(removeImageFailure(action.payload.templateId));
+        }
+    } catch (e) {
+        yield put(removeImageFailure(action.payload.imageId, e));
+    }
+}
+
 export default function* defaultSaga() {
     const getGenresRequest = yield fork(takeLatest, GENRES_LOADING_REQUEST, getGenres);
     const filUploadRequest = yield fork(takeLatest, UPLOAD_REQUEST, uploadFile);
+    const getUploadedImagesRequest = yield fork(
+        takeLatest,
+        UPLOADED_IMAGES_REQUEST,
+        getUploadedImages
+    );
+    const removeImageRequest = yield fork(takeLatest, REMOVE_IMAGE_REQUEST, removeImage);
 
     // Suspend execution until location changes
     yield take(LOCATION_CHANGE);
     yield cancel(getGenresRequest);
     yield cancel(filUploadRequest);
+    yield cancel(getUploadedImagesRequest);
+    yield cancel(removeImageRequest);
 }

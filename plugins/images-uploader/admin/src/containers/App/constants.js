@@ -4,7 +4,7 @@ import keyMirror from '../../utils/key-mirror';
 export default keyMirror('PACK_GENERATOR', [
     'GENRES_LOADING_REQUEST',
     'GENRES_LOADING_SUCCESS',
-    'GENRES_LOADING_ERROR',
+    'GENRES_LOADING_FAILURE',
     'FILES_SET',
     'UPLOAD_START',
     'UPLOAD_REQUEST',
@@ -12,5 +12,11 @@ export default keyMirror('PACK_GENERATOR', [
     'UPLOAD_ERROR',
     'CLEAR_STORE',
     'UPLOAD_DONE',
+    'UPLOADED_IMAGES_REQUEST',
+    'UPLOADED_IMAGES_SUCCESS',
+    'UPLOADED_IMAGES_FAILURE',
+    'REMOVE_IMAGE_REQUEST',
+    'REMOVE_IMAGE_SUCCESS',
+    'REMOVE_IMAGE_FAILURE',
     'UPLOAD_CLEAR_STATE',
 ]);

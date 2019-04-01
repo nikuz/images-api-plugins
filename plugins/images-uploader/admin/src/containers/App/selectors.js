@@ -31,6 +31,18 @@ const isUploadingDone = () => (
     createSelector(selectDomain(), substate => substate.uploadingDone)
 );
 
+const getUploadedImages = () => (
+    createSelector(selectDomain(), substate => substate.uploadedImages)
+);
+
+const getUploadedImagesLoading = () => (
+    createSelector(selectDomain(), substate => substate.uploadedImagesLoading)
+);
+
+const getUploadedImagesError = () => (
+    createSelector(selectDomain(), substate => substate.uploadedImagesError)
+);
+
 export {
     isLoading,
     getError,
@@ -39,4 +51,7 @@ export {
     isUploadLoading,
     isUploadRequested,
     isUploadingDone,
+    getUploadedImages,
+    getUploadedImagesLoading,
+    getUploadedImagesError,
 };

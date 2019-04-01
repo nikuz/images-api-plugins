@@ -4,7 +4,7 @@ import constants from './constants';
 const {
     GENRES_LOADING_REQUEST,
     GENRES_LOADING_SUCCESS,
-    GENRES_LOADING_ERROR,
+    GENRES_LOADING_FAILURE,
     FILES_SET,
     UPLOAD_START,
     UPLOAD_REQUEST,
@@ -12,6 +12,12 @@ const {
     UPLOAD_ERROR,
     UPLOAD_DONE,
     UPLOAD_CLEAR_STATE,
+    UPLOADED_IMAGES_REQUEST,
+    UPLOADED_IMAGES_SUCCESS,
+    UPLOADED_IMAGES_FAILURE,
+    REMOVE_IMAGE_REQUEST,
+    REMOVE_IMAGE_SUCCESS,
+    REMOVE_IMAGE_FAILURE,
     CLEAR_STORE,
 } = constants;
 
@@ -24,8 +30,9 @@ export const genresLoadingSuccess = data => ({
     payload: data,
 });
 
-export const genresLoadingError = () => ({
-    type: GENRES_LOADING_ERROR,
+export const genresLoadingFailure = error => ({
+    type: GENRES_LOADING_FAILURE,
+    payload: error,
 });
 
 export const setFiles = files => ({
@@ -47,8 +54,9 @@ export const uploadSuccess = files => ({
     payload: files,
 });
 
-export const uploadError = () => ({
+export const uploadError = error => ({
     type: UPLOAD_ERROR,
+    payload: error,
 });
 
 export const uploadDone = () => ({
@@ -57,6 +65,44 @@ export const uploadDone = () => ({
 
 export const uploadClearState = () => ({
     type: UPLOAD_CLEAR_STATE,
+});
+
+export const getUploadedImagesRequest = genre => ({
+    type: UPLOADED_IMAGES_REQUEST,
+    payload: genre,
+});
+
+export const getUploadedImagesSuccess = images => ({
+    type: UPLOADED_IMAGES_SUCCESS,
+    payload: images,
+});
+
+export const getUploadedImagesFailure = error => ({
+    type: UPLOADED_IMAGES_FAILURE,
+    payload: error,
+});
+
+export const removeImageRequest = (imageId, fileId) => ({
+    type: REMOVE_IMAGE_REQUEST,
+    payload: {
+        imageId,
+        fileId,
+    },
+});
+
+export const removeImageSuccess = imageId => ({
+    type: REMOVE_IMAGE_SUCCESS,
+    payload: {
+        imageId,
+    },
+});
+
+export const removeImageFailure = (imageId, error) => ({
+    type: REMOVE_IMAGE_FAILURE,
+    payload: {
+        imageId,
+        error,
+    },
 });
 
 export const clearStore = () => ({

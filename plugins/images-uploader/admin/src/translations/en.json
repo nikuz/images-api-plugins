@@ -8,5 +8,11 @@
   "Images-List.title": "New images",
   "Images-List.upload": "Upload",
   "Genre.title": "Select genre",
-  "Genre.no-selection-error": "Please select genre"
+  "Genre.no-selection-error": "Please select genre",
+  "Tab.Upload": "Upload",
+  "Tab.Preview": "Preview",
+  "Preview.Select-Genre-Error": "Please select genre",
+  "Preview.Remove": "Remove",
+  "Preview.Remove-Success": "Image successfully removed",
+  "Preview.Amount-Total": "Total: {amount}"
 }

@@ -17,7 +17,8 @@ module.exports = {
                     authorization,
                     file,
                     name,
-                    genre
+                    genre,
+                    size
                 );
 
                 return uploadedImage;
@@ -49,7 +50,7 @@ module.exports = {
         })
     ),
 
-    add: async (host, authorization, file, croppedFilePath, genre) => (
+    add: async (host, authorization, file, croppedFilePath, genre, crop) => (
         new Promise((resolve, reject) => {
             request.post({
                 url: `http://${host}/upload`,
@@ -79,6 +80,9 @@ module.exports = {
                     formData: {
                         url: `/uploads/${fileUploadResult.hash}${fileUploadResult.ext}`,
                         genre,
+                        fileId: fileUploadResult.id,
+                        size: fileUploadResult.size,
+                        crop,
                     },
                 }, (err) => {
                     if (err) {

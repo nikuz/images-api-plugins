@@ -115,7 +115,8 @@
 .pluginImagesUploader_fileItemError {
   position: absolute;
   right: 1em;
-  top: 0;
+  top: 50%;
+  transform: translateY(-50%);
 
   i {
     color: red;
@@ -126,4 +127,63 @@
 .pluginImagesUploader_form {
   display: flex;
   justify-content: space-between;
+}
+
+.pluginImagesUploader_tabs {
+  display: flex;
+  margin-bottom: 20px;
+  border-bottom: 1px solid #CCC;
+}
+
+.pluginImagesUploader_tab {
+  padding: 5px 20px;
+  border: 1px solid #CCC;
+  border-bottom: 0;
+  border-radius: 5px 5px 0 0;
+  margin: 5px 0 -1px 15px;
+  background-color: #FAFAFB;
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: bold;
+}
+
+.pluginImagesUploader_tabActive {
+  padding: 7px 20px 5px;
+  margin-top: -2px;
+  background-color: #FFF;
+  cursor: default;
+}
+
+.pluginImagesUploader_previewContainerButton {
+  position: absolute;
+  top: 50%;
+  margin: 0;
+  right: 0;
+  transform: translateY(-50%);
+  background: #FFF;
+  border: 0.1rem solid #F64D0A;
+  color: #F64D0A;
+  z-index: 11;
+}
+
+.pluginImagesUploader_removeAllButton {
+  margin: 0;
+  height: 4rem;
+  background: #FFF;
+  border: 0.1rem solid #F64D0A;
+  color: #F64D0A;
+  font-size: 2rem;
+}
+
+.pluginImagesUploader_removeAllButtonContainer {
+  text-align: right;
+}
+
+.pluginImagesUploader_greenAccent {
+  color: #2DD210;
+}
+
+.pluginImagesUploader_previewAmount {
+  margin: -2rem 0 1rem 1rem;
+  font-size: 2rem;
 }

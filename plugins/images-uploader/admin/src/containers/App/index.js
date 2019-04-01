@@ -16,6 +16,8 @@ import {
     uploadRequest,
     uploadDone,
     uploadClearState,
+    getUploadedImagesRequest,
+    removeImageRequest,
     clearStore,
 } from './actions';
 
@@ -27,6 +29,9 @@ import {
     isUploadLoading,
     isUploadRequested,
     isUploadingDone,
+    getUploadedImages,
+    getUploadedImagesLoading,
+    getUploadedImagesError,
 } from './selectors';
 
 import reducer from './reducer';
@@ -40,6 +45,8 @@ const mapDispatchToProps = dispatch => bindActionCreators(
         uploadRequest,
         uploadDone,
         uploadClearState,
+        getUploadedImages: getUploadedImagesRequest,
+        removeImage: removeImageRequest,
         clearStore,
     },
     dispatch
@@ -53,6 +60,9 @@ const mapStateToProps = createStructuredSelector({
     uploadLoading: isUploadLoading(),
     uploadRequested: isUploadRequested(),
     uploadingDone: isUploadingDone(),
+    uploadedImages: getUploadedImages(),
+    uploadedImagesLoading: getUploadedImagesLoading(),
+    uploadedImagesError: getUploadedImagesError(),
 });
 
 const withConnect = connect(mapStateToProps, mapDispatchToProps);
