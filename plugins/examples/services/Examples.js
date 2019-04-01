@@ -7,13 +7,14 @@ module.exports = {
         const formData = {
             ...props,
         };
-        if (logo) {
-            formData.logo = fs.createReadStream(logo.path);
-        }
 
         Object.keys(formData).forEach((key) => {
             formData[key] = String(formData[key]);
         });
+
+        if (logo) {
+            formData.logo = fs.createReadStream(logo.path);
+        }
 
         return new Promise((resolve, reject) => {
             request.post({
