@@ -10,7 +10,7 @@
     },
     {
       "method": "GET",
-      "path": "/",
+      "path": "/get",
       "handler": "Examples.get",
       "config": {
         "policies": []

@@ -64,16 +64,30 @@ export default class App extends React.Component {
     };
 
     handleGetExample = (template) => {
+        const { genres } = this.props;
+        const { genre } = this.state;
+        const selectedGenre = genres.find(item => item.id === genre);
+
+        this.props.clearExample();
         this.setState({
             template: template.id,
         });
-        this.props.clearExample();
-        this.props.getExample({
+
+        const props = {
             ...template,
             width: exampleSize,
             height: exampleSize,
             animate: template.format !== 'jpeg',
+            genre: selectedGenre && selectedGenre.id,
+        };
+        delete props.image;
+        Object.keys(props).forEach((key) => {
+            if (key.indexOf('_') !== -1) {
+                delete props[key];
+            }
         });
+
+        this.props.getExample(props);
     };
 
     renderTemplates = () => {

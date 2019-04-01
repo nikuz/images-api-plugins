@@ -1,5 +1,5 @@
 
-const querystring = require('querystring');
+const mongoose = require('mongoose');
 
 module.exports = {
     index: async (ctx) => {
@@ -9,9 +9,26 @@ module.exports = {
     },
 
     get: async (ctx) => {
-        const randomImage = await Image.aggregate([{ $sample: { size: 1 } }]); // eslint-disable-line
-        const randomQuote = await Quotes.aggregate([{ $sample: { size: 1 } }]); // eslint-disable-line
-        const configuratorProps = querystring.decode(ctx.request.querystring);
+        const { logo } = ctx.request.body.files;
+        const fields = ctx.request.body.fields;
+
+        if (!fields.genre) {
+            ctx.response.serverUnavailable('define genre');
+            return;
+        }
+
+        const randomImage = await Image // eslint-disable-line
+            .aggregate([
+                { $match: { genre: mongoose.Types.ObjectId(fields.genre) } },
+                { $sample: { size: 1 } },
+            ]);
+
+        const randomQuote = await Quotes // eslint-disable-line
+            .aggregate([
+                { $match: { genre: mongoose.Types.ObjectId(fields.genre) } },
+                { $sample: { size: 1 } },
+            ]);
+
         const apiUrl = await strapi.config.url;
 
         if (!randomImage || !randomImage[0]) {
@@ -24,16 +41,23 @@ module.exports = {
             return;
         }
 
+        const width = Number(fields.width);
+        const height = Number(fields.height);
         const props = {
-            ...configuratorProps,
+            ...ctx.request.body.fields,
             imageURL: `${apiUrl}${randomImage[0].url}`,
             text: randomQuote[0].text,
             author: randomQuote[0].author,
+            width: width < 1080 ? width : 500,
+            height: height < 1080 ? height : 500,
+            watermark: true,
         };
         delete props.image;
-        delete props.genre;
 
-        const example = await strapi.plugins.examples.services.examples.get(props);
+        const example = await strapi.plugins.examples.services.examples.get(
+            logo,
+            props
+        );
 
         if (example.code !== 200) {
             ctx.response.serverUnavailable(example.body);

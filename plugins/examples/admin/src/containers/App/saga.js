@@ -59,11 +59,21 @@ export function* getTemplates(action) {
 
 export function* getExample(action) {
     try {
-        let requestURL = '/examples/get?';
-        Object.keys(action.payload).forEach((key) => {
-            requestURL += `${key}=${encodeURIComponent(action.payload[key])}&`;
+        const headers = {
+            'X-Forwarded-Host': 'strapi',
+        };
+        const formData = new FormData();
+        Object.keys(action.payload).forEach((item) => {
+            formData.append(item, action.payload[item]);
         });
-        const response = yield call(request, requestURL, { method: 'GET' });
+
+        const response = yield call(
+            request,
+            '/examples/get',
+            { method: 'POST', headers, body: formData },
+            false,
+            false
+        );
 
         if (response) {
             yield put(getExampleSuccess(response));
