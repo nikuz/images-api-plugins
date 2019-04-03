@@ -25,12 +25,26 @@ export default class App extends React.Component {
         format: 'jpeg',
         isDragging: false,
         configurator: {},
-        tab: 'upload',
+        configuratorChanged: false,
+        tab: 'configurator',
+        edit: false,
     };
 
     componentDidMount() {
         this.props.userLoadingRequest();
         this.props.getGenres();
+    }
+
+    componentWillReceiveProps(nextProps) {
+        if (
+            this.state.edit
+            && nextProps.saveResult !== this.props.saveResult
+            && nextProps.saveResult !== null
+        ) {
+            this.setState({
+                configurator: nextProps.saveResult,
+            });
+        }
     }
 
     componentDidUpdate(prevProps, prevState) {
@@ -100,6 +114,8 @@ export default class App extends React.Component {
             image,
             crop,
             format,
+            edit,
+            configurator,
         } = this.state;
 
         let width;
@@ -117,16 +133,25 @@ export default class App extends React.Component {
 
         this.props.clearSaveResult();
         this.setState({
-            configurator: data,
+            configurator: {
+                ...configurator,
+                ...data,
+            },
+            configuratorChanged: true,
         });
-        this.props.upload({
-            file: image,
+        const props = {
             size: crop,
             format,
             ...data,
             width,
             height,
-        });
+        };
+        if (edit) {
+            props.imageURL = `${strapi.backendURL}${configurator.originalImage}`;
+        } else if (image) {
+            props.file = image;
+        }
+        this.props.getPreview(props);
     };
 
     handleCropSizeChange = (e) => {
@@ -143,7 +168,7 @@ export default class App extends React.Component {
     };
 
     handleFormatChange = (e) => {
-        this.props.clearUploadResult();
+        this.props.clearPreviewResult();
         this.setState({
             format: e.target.value,
         });
@@ -158,6 +183,7 @@ export default class App extends React.Component {
     handleClear = () => {
         this.setState({
             image: null,
+            edit: false,
         });
         this.props.clearStore();
         this.props.getGenres();
@@ -168,13 +194,15 @@ export default class App extends React.Component {
             genre,
             configurator,
             format,
+            image,
+            edit,
         } = this.state;
         const {
-            uploadResult,
+            previewResult,
             user,
         } = this.props;
 
-        const arr = uploadResult.split(',');
+        const arr = previewResult.split(',');
         const mime = arr[0].match(/:(.*?);/)[1];
         const bstr = atob(arr[1]);
         let n = bstr.length;
@@ -191,17 +219,37 @@ export default class App extends React.Component {
             return;
         }
 
-        this.props.save({
-            ...configurator,
-            file: templateFile,
-            genre,
-            format,
-            user: user._id, // eslint-disable-line
+        if (edit) {
+            this.props.update(templateFile, {
+                ...configurator,
+                genre,
+                format,
+            });
+        } else {
+            this.props.save(image, templateFile, {
+                ...configurator,
+                genre,
+                format,
+                user: user._id, // eslint-disable-line
+            });
+        }
+    };
+
+    handleEdit = (template) => {
+        this.setState({
+            edit: true,
+            configurator: template,
+            tab: 'configurator',
+            configuratorChanged: false,
         });
     };
 
     handleRemove = (template) => {
-        this.props.removeTemplate(template.fileId, template.id);
+        this.props.removeTemplate(
+            template.fileId,
+            template.originalFileId,
+            template.id
+        );
     };
 
     renderTemplates = () => {
@@ -263,10 +311,18 @@ export default class App extends React.Component {
                                     </div>
                                     <a href={url} target="_blank" />
                                     <Button
+                                        label="templates-generator.Preview.Edit"
+                                        primary
+                                        className={
+                                            styles.pluginTemplatesGenerator_previewButtonEdit
+                                        }
+                                        onClick={() => this.handleEdit(item)}
+                                    />
+                                    <Button
                                         label="templates-generator.Preview.Remove"
                                         secondaryHotline
                                         className={
-                                            styles.pluginTemplatesGenerator_previewContainerButton
+                                            styles.pluginTemplatesGenerator_previewButton
                                         }
                                         onClick={() => this.handleRemove(item)}
                                     />
@@ -295,12 +351,14 @@ export default class App extends React.Component {
             genresLoading,
             genresError,
             genres,
-            uploadLoading,
-            uploadError,
-            uploadResult,
+            previewLoading,
+            previewError,
+            previewResult,
             saveLoading,
             saveError,
             saveResult,
+            updateLoading,
+            updateError,
             templatesLoading,
             templatesError,
         } = this.props;
@@ -311,9 +369,16 @@ export default class App extends React.Component {
             format,
             isDragging,
             tab,
+            edit,
+            configurator,
+            configuratorChanged,
         } = this.state;
         const selectedGenre = genres.find(item => item.id === genre);
         const isPreviewTab = tab === 'preview';
+        let previewUrl = previewResult;
+        if (edit && !configuratorChanged) {
+            previewUrl = `${strapi.backendURL}${configurator.image}`;
+        }
 
         const parametersContainerClassName = cn(
             styles.pluginTemplatesGenerator_parametersContainer,
@@ -325,7 +390,7 @@ export default class App extends React.Component {
         );
         const resultContainerClassName = styles
             .pluginTemplatesGenerator_configuratorResultContainer;
-        const uploadTabClassName = cn(
+        const configuratorTabClassName = cn(
             styles.pluginTemplatesGenerator_tab,
             !isPreviewTab && styles.pluginTemplatesGenerator_tabActive
         );
@@ -349,10 +414,10 @@ export default class App extends React.Component {
                     />
                     <div className={styles.pluginTemplatesGenerator_tabs}>
                         <div
-                            className={uploadTabClassName}
-                            onClick={() => this.handleTabSelection('upload')}
+                            className={configuratorTabClassName}
+                            onClick={() => this.handleTabSelection('configurator')}
                         >
-                            <FormattedMessage id="templates-generator.Tab.Upload" />
+                            <FormattedMessage id="templates-generator.Tab.Configurator" />
                         </div>
                         <div
                             className={previewTabClassName}
@@ -404,10 +469,10 @@ export default class App extends React.Component {
                             </div>
                         ) }
                         <div>
-                            <h3 className={styles.pluginImagesUploader_cropSelectorTitle}>
+                            <h3 className={styles.pluginTemplatesGenerator_cropSelectorTitle}>
                                 <FormattedMessage id="templates-generator.Genre.title" />
                             </h3>
-                            <div className={styles.pluginImagesUploader_cropSelectorContainer}>
+                            <div className={styles.pluginTemplatesGenerator_cropSelectorContainer}>
                                 <InputSelect
                                     onChange={this.handleGenreChange}
                                     name="genre"
@@ -419,7 +484,7 @@ export default class App extends React.Component {
                         </div>
                     </div>
 
-                    { !image && !isPreviewTab && (
+                    { !image && !edit && !isPreviewTab && (
                         <div className={fileLoaderContainerClassName}>
                             <div>
                                 <div className={styles.icon}>
@@ -455,27 +520,27 @@ export default class App extends React.Component {
                             />
                         </div>
                     ) }
-                    { image && !isPreviewTab && (
+                    { (image || edit) && !isPreviewTab && (
                         <div className={styles.pluginTemplatesGenerator_configuratorContainer}>
                             <div className={styles.pluginTemplatesGenerator_configuratorCanvas}>
                                 <div className={resultContainerClassName}>
-                                    { !uploadError && uploadResult && format !== 'mp4' && (
+                                    { !previewError && previewUrl && format !== 'mp4' && (
                                         <img
-                                            src={uploadResult}
+                                            src={previewUrl}
                                             width="500px"
                                             alt=""
                                         />
                                     ) }
-                                    { !uploadError && !uploadLoading && uploadResult && format === 'mp4' && (
+                                    { !previewError && !previewLoading && previewUrl && format === 'mp4' && (
                                         <video
                                             ref={el => this.previewVideoEl = el}
                                             width="500px"
                                             autoPlay
                                         >
-                                            <source type="video/mp4" src={uploadResult} />
+                                            <source type="video/mp4" src={previewUrl} />
                                         </video>
                                     ) }
-                                    { uploadLoading && (
+                                    { previewLoading && (
                                         <div
                                             className={
                                                 styles.pluginTemplatesGenerator_canvasLoading
@@ -484,7 +549,7 @@ export default class App extends React.Component {
                                             <LoadingIndicator />
                                         </div>
                                     ) }
-                                    { uploadError && uploadError.message }
+                                    { previewError && previewError.message }
                                 </div>
                                 <div
                                     className={styles.pluginTemplatesGenerator_configuratorButtons}
@@ -508,7 +573,7 @@ export default class App extends React.Component {
                                             onClick={this.handleClear}
                                         />
                                     </div>
-                                    { uploadResult && !saveError && !saveResult && (
+                                    { previewResult && !saveError && !saveResult && (
                                         <Button
                                             label="templates-generator.Save"
                                             primary
@@ -541,7 +606,7 @@ export default class App extends React.Component {
                                 translationDomain="templates-generator"
                                 text="There is no elevator to success, you have to take the stairs."
                                 author="Quote Author"
-                                {...this.state.configurator}
+                                {...configurator}
                                 textEffectDisabled={format === 'jpeg'}
                                 authorEffectDisabled={format === 'jpeg'}
                                 onSubmit={this.handleConfiguratorChange}
@@ -551,7 +616,13 @@ export default class App extends React.Component {
 
                     { isPreviewTab && this.renderTemplates() }
 
-                    {(userLoading || genresLoading || saveLoading || templatesLoading) && (
+                    {(
+                        userLoading
+                        || genresLoading
+                        || saveLoading
+                        || updateLoading
+                        || templatesLoading
+                    ) && (
                         <div className={styles.pluginTemplatesGenerator_loading}>
                             <LoadingIndicator />
                         </div>
@@ -569,6 +640,11 @@ export default class App extends React.Component {
                     { templatesError && (
                         <div>
                             { templatesError.toString() }
+                        </div>
+                    ) }
+                    { updateError && (
+                        <div>
+                            { updateError.toString() }
                         </div>
                     ) }
                 </div>
@@ -591,15 +667,19 @@ App.propTypes = {
     genresLoading: PropTypes.bool.isRequired,
     genresError: PropTypes.object,
     getGenres: PropTypes.func.isRequired,
-    uploadLoading: PropTypes.bool.isRequired,
-    uploadError: PropTypes.object,
-    uploadResult: PropTypes.string,
-    upload: PropTypes.func.isRequired,
-    clearUploadResult: PropTypes.func.isRequired,
+    previewLoading: PropTypes.bool.isRequired,
+    previewError: PropTypes.object,
+    previewResult: PropTypes.string,
+    getPreview: PropTypes.func.isRequired,
+    clearPreviewResult: PropTypes.func.isRequired,
     saveLoading: PropTypes.bool.isRequired,
     saveError: PropTypes.object,
     saveResult: PropTypes.object,
     save: PropTypes.func.isRequired,
+    updateLoading: PropTypes.bool.isRequired,
+    updateError: PropTypes.object,
+    updateResult: PropTypes.object,
+    update: PropTypes.func.isRequired,
     clearSaveResult: PropTypes.func.isRequired,
     getTemplates: PropTypes.func.isRequired,
     templates: PropTypes.arrayOf(PropTypes.object).isRequired,

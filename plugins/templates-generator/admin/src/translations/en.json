@@ -48,7 +48,7 @@
   "Save": "Save template",
   "Save.Select-Genre-Error": "Please select genre",
   "Save.Success": "Save success",
-  "Tab.Upload": "Upload",
+  "Tab.Configurator": "Configurator",
   "Tab.Preview": "Preview",
   "Preview.Select-Genre-Error": "Please select genre",
   "Preview.Format": "Format",
@@ -56,5 +56,6 @@
   "Preview.TextFontFamily": "Text font",
   "Preview.AuthorFontFamily": "Author font",
   "Preview.Remove": "Remove",
+  "Preview.Edit": "Edit",
   "Preview.Remove-Success": "Template successfully removed"
 }

@@ -4,24 +4,27 @@ import constants from './constants';
 const {
     USER_LOADING_REQUEST,
     USER_LOADING_SUCCESS,
-    USER_LOADING_ERROR,
+    USER_LOADING_FAILURE,
     GENRES_LOADING_REQUEST,
     GENRES_LOADING_SUCCESS,
-    GENRES_LOADING_ERROR,
-    UPLOAD_REQUEST,
-    UPLOAD_SUCCESS,
-    UPLOAD_ERROR,
-    UPLOAD_CLEAR_RESULT,
+    GENRES_LOADING_FAILURE,
+    PREVIEW_REQUEST,
+    PREVIEW_SUCCESS,
+    PREVIEW_FAILURE,
+    PREVIEW_CLEAR_RESULT,
     SAVE_REQUEST,
     SAVE_SUCCESS,
-    SAVE_ERROR,
+    SAVE_FAILURE,
     SAVE_CLEAR_RESULT,
+    UPDATE_REQUEST,
+    UPDATE_SUCCESS,
+    UPDATE_FAILURE,
     TEMPLATES_REQUEST,
     TEMPLATES_SUCCESS,
-    TEMPLATES_ERROR,
+    TEMPLATES_FAILURE,
     TEMPLATES_REMOVE_REQUEST,
     TEMPLATES_REMOVE_SUCCESS,
-    TEMPLATES_REMOVE_ERROR,
+    TEMPLATES_REMOVE_FAILURE,
     CLEAR_STORE,
 } = constants;
 
@@ -32,12 +35,14 @@ const initialState = {
     genresLoading: false,
     genresError: null,
     genres: [],
-    uploadLoading: false,
-    uploadError: null,
-    uploadResult: null,
+    previewLoading: false,
+    previewError: null,
+    previewResult: null,
     saveLoading: false,
     saveError: null,
     saveResult: null,
+    updateLoading: false,
+    updateError: null,
     templates: [],
     templatesLoading: false,
     templatesError: null,
@@ -60,7 +65,7 @@ function templatesGeneratorReducer(state = initialState, action) {
                 user: payload || {},
             };
 
-        case USER_LOADING_ERROR:
+        case USER_LOADING_FAILURE:
             return {
                 ...state,
                 userLoading: false,
@@ -81,38 +86,38 @@ function templatesGeneratorReducer(state = initialState, action) {
                 genres: payload,
             };
 
-        case GENRES_LOADING_ERROR:
+        case GENRES_LOADING_FAILURE:
             return {
                 ...state,
                 genresLoading: false,
                 genresError: payload,
             };
 
-        case UPLOAD_REQUEST:
+        case PREVIEW_REQUEST:
             return {
                 ...state,
-                uploadLoading: true,
-                uploadError: null,
+                previewLoading: true,
+                previewError: null,
             };
 
-        case UPLOAD_SUCCESS:
+        case PREVIEW_SUCCESS:
             return {
                 ...state,
-                uploadLoading: false,
-                uploadResult: payload.image,
+                previewLoading: false,
+                previewResult: payload.image,
             };
 
-        case UPLOAD_ERROR:
+        case PREVIEW_FAILURE:
             return {
                 ...state,
-                uploadLoading: false,
-                uploadError: payload,
+                previewLoading: false,
+                previewError: payload,
             };
 
-        case UPLOAD_CLEAR_RESULT:
+        case PREVIEW_CLEAR_RESULT:
             return {
                 ...state,
-                uploadResult: null,
+                previewResult: null,
             };
 
         case SAVE_REQUEST:
@@ -130,7 +135,7 @@ function templatesGeneratorReducer(state = initialState, action) {
                 saveResult: payload,
             };
 
-        case SAVE_ERROR:
+        case SAVE_FAILURE:
             return {
                 ...state,
                 saveLoading: false,
@@ -141,6 +146,27 @@ function templatesGeneratorReducer(state = initialState, action) {
             return {
                 ...state,
                 saveResult: null,
+            };
+
+        case UPDATE_REQUEST:
+            return {
+                ...state,
+                updateLoading: true,
+                updateError: null,
+            };
+
+        case UPDATE_SUCCESS:
+            return {
+                ...state,
+                updateLoading: false,
+                saveResult: payload,
+            };
+
+        case UPDATE_FAILURE:
+            return {
+                ...state,
+                updateLoading: false,
+                updateError: payload,
             };
 
         case TEMPLATES_REQUEST:
@@ -157,7 +183,7 @@ function templatesGeneratorReducer(state = initialState, action) {
                 templates: payload,
             };
 
-        case TEMPLATES_ERROR:
+        case TEMPLATES_FAILURE:
             return {
                 ...state,
                 templatesLoading: false,
@@ -178,7 +204,7 @@ function templatesGeneratorReducer(state = initialState, action) {
             };
         }
 
-        case TEMPLATES_REMOVE_ERROR: {
+        case TEMPLATES_REMOVE_FAILURE: {
             const templates = state.templates.slice(0);
             const removingTemplate = templates.find(item => (
                 item.id === payload.templateId

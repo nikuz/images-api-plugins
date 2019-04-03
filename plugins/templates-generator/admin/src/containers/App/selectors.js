@@ -27,16 +27,16 @@ const getGenresError = () => (
     createSelector(selectDomain(), substate => substate.genresError)
 );
 
-const getUploadLoading = () => (
-    createSelector(selectDomain(), substate => substate.uploadLoading)
+const getPreviewLoading = () => (
+    createSelector(selectDomain(), substate => substate.previewLoading)
 );
 
-const getUploadError = () => (
-    createSelector(selectDomain(), substate => substate.uploadError)
+const getPreviewError = () => (
+    createSelector(selectDomain(), substate => substate.previewError)
 );
 
-const getUploadResult = () => (
-    createSelector(selectDomain(), substate => substate.uploadResult)
+const getPreviewResult = () => (
+    createSelector(selectDomain(), substate => substate.previewResult)
 );
 
 const getSaveLoading = () => (
@@ -49,6 +49,14 @@ const getSaveError = () => (
 
 const getSaveResult = () => (
     createSelector(selectDomain(), substate => substate.saveResult)
+);
+
+const getUpdateLoading = () => (
+    createSelector(selectDomain(), substate => substate.updateLoading)
+);
+
+const getUpdateError = () => (
+    createSelector(selectDomain(), substate => substate.updateError)
 );
 
 const getTemplatesLoading = () => (
@@ -70,12 +78,14 @@ export {
     getGenres,
     getGenresLoading,
     getGenresError,
-    getUploadLoading,
-    getUploadError,
-    getUploadResult,
+    getPreviewLoading,
+    getPreviewError,
+    getPreviewResult,
     getSaveLoading,
     getSaveError,
     getSaveResult,
+    getUpdateLoading,
+    getUpdateError,
     getTemplatesLoading,
     getTemplatesError,
     getTemplates,

@@ -10,14 +10,6 @@
     },
     {
       "method": "POST",
-      "path": "/",
-      "handler": "TemplatesGenerator.save",
-      "config": {
-        "policies": []
-      }
-    },
-    {
-      "method": "POST",
       "path": "/preview",
       "handler": "TemplatesGenerator.preview",
       "config": {

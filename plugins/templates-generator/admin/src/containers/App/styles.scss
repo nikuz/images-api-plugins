@@ -225,7 +225,7 @@
   z-index: 10;
 }
 
-.pluginTemplatesGenerator_previewContainerButton {
+.pluginTemplatesGenerator_previewButton {
   position: absolute;
   top: 0;
   margin: 0;
@@ -233,6 +233,15 @@
   background: #FFF;
   border: 0.1rem solid #F64D0A;
   color: #F64D0A;
+  z-index: 11;
+}
+
+.pluginTemplatesGenerator_previewButtonEdit {
+  position: absolute;
+  top: 0;
+  margin: 0;
+  right: auto;
+  left: 0;
   z-index: 11;
 }
 

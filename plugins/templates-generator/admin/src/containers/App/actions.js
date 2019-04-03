@@ -4,24 +4,27 @@ import constants from './constants';
 const {
     USER_LOADING_REQUEST,
     USER_LOADING_SUCCESS,
-    USER_LOADING_ERROR,
+    USER_LOADING_FAILURE,
     GENRES_LOADING_REQUEST,
     GENRES_LOADING_SUCCESS,
-    GENRES_LOADING_ERROR,
-    UPLOAD_REQUEST,
-    UPLOAD_SUCCESS,
-    UPLOAD_ERROR,
-    UPLOAD_CLEAR_RESULT,
+    GENRES_LOADING_FAILURE,
+    PREVIEW_REQUEST,
+    PREVIEW_SUCCESS,
+    PREVIEW_FAILURE,
+    PREVIEW_CLEAR_RESULT,
     SAVE_REQUEST,
     SAVE_SUCCESS,
-    SAVE_ERROR,
+    SAVE_FAILURE,
+    UPDATE_REQUEST,
+    UPDATE_SUCCESS,
+    UPDATE_FAILURE,
     SAVE_CLEAR_RESULT,
     TEMPLATES_REQUEST,
     TEMPLATES_SUCCESS,
-    TEMPLATES_ERROR,
+    TEMPLATES_FAILURE,
     TEMPLATES_REMOVE_REQUEST,
     TEMPLATES_REMOVE_SUCCESS,
-    TEMPLATES_REMOVE_ERROR,
+    TEMPLATES_REMOVE_FAILURE,
     CLEAR_STORE,
 } = constants;
 
@@ -35,7 +38,7 @@ export const userLoadingSuccess = data => ({
 });
 
 export const userLoadingError = () => ({
-    type: USER_LOADING_ERROR,
+    type: USER_LOADING_FAILURE,
 });
 
 export const genresLoadingRequest = () => ({
@@ -48,32 +51,36 @@ export const genresLoadingSuccess = data => ({
 });
 
 export const genresLoadingError = error => ({
-    type: GENRES_LOADING_ERROR,
+    type: GENRES_LOADING_FAILURE,
     payload: error,
 });
 
-export const uploadRequest = file => ({
-    type: UPLOAD_REQUEST,
+export const previewRequest = file => ({
+    type: PREVIEW_REQUEST,
     payload: file,
 });
 
-export const uploadSuccess = result => ({
-    type: UPLOAD_SUCCESS,
+export const previewSuccess = result => ({
+    type: PREVIEW_SUCCESS,
     payload: result,
 });
 
-export const uploadError = error => ({
-    type: UPLOAD_ERROR,
+export const previewError = error => ({
+    type: PREVIEW_FAILURE,
     payload: error,
 });
 
-export const clearUploadResult = () => ({
-    type: UPLOAD_CLEAR_RESULT,
+export const clearPreviewResult = () => ({
+    type: PREVIEW_CLEAR_RESULT,
 });
 
-export const saveRequest = data => ({
+export const saveRequest = (originalFile, templatePreview, template) => ({
     type: SAVE_REQUEST,
-    payload: data,
+    payload: {
+        originalFile,
+        templatePreview,
+        template,
+    },
 });
 
 export const saveSuccess = result => ({
@@ -82,7 +89,25 @@ export const saveSuccess = result => ({
 });
 
 export const saveError = error => ({
-    type: SAVE_ERROR,
+    type: SAVE_FAILURE,
+    payload: error,
+});
+
+export const updateRequest = (templatePreview, template) => ({
+    type: UPDATE_REQUEST,
+    payload: {
+        templatePreview,
+        template,
+    },
+});
+
+export const updateSuccess = result => ({
+    type: UPDATE_SUCCESS,
+    payload: result,
+});
+
+export const updateError = error => ({
+    type: UPDATE_FAILURE,
     payload: error,
 });
 
@@ -101,14 +126,15 @@ export const getTemplatesSuccess = result => ({
 });
 
 export const getTemplatesError = error => ({
-    type: TEMPLATES_ERROR,
+    type: TEMPLATES_FAILURE,
     payload: error,
 });
 
-export const removeTemplateRequest = (fileId, templateId) => ({
+export const removeTemplateRequest = (fileId, originalFileId, templateId) => ({
     type: TEMPLATES_REMOVE_REQUEST,
     payload: {
         fileId,
+        originalFileId,
         templateId,
     },
 });
@@ -119,7 +145,7 @@ export const removeTemplateSuccess = result => ({
 });
 
 export const removeTemplateError = (templateId, error) => ({
-    type: TEMPLATES_REMOVE_ERROR,
+    type: TEMPLATES_REMOVE_FAILURE,
     payload: {
         templateId,
         error,
