@@ -20,7 +20,7 @@ export default class App extends React.Component {
     state = {
         genre: '',
         format: 'jpeg',
-        template: '',
+        selectedTemplates: [],
     };
 
     componentDidMount() {
@@ -66,18 +66,25 @@ export default class App extends React.Component {
     handleGetExample = (template) => {
         const { genres } = this.props;
         const { genre } = this.state;
+        const selectedTemplates = this.state.selectedTemplates.slice(0);
+        const templateIsSelected = selectedTemplates.findIndex(item => item === template.id);
+        if (templateIsSelected !== -1) {
+            selectedTemplates.splice(templateIsSelected, 1);
+        } else {
+            selectedTemplates.push(template.id);
+        }
+
+        this.setState(() => ({ selectedTemplates }));
+        if (selectedTemplates.length === 0) {
+            return;
+        }
+
         const selectedGenre = genres.find(item => item.id === genre);
 
         this.props.clearExample();
-        this.setState({
-            template: template.id,
-        });
 
         const props = {
-            ...template,
-            width: exampleSize,
-            height: exampleSize,
-            animate: template.format !== 'jpeg',
+            templates: selectedTemplates,
             genre: selectedGenre && selectedGenre.id,
         };
         delete props.image;
@@ -92,7 +99,7 @@ export default class App extends React.Component {
 
     renderTemplates = () => {
         const {
-            template,
+            selectedTemplates,
             format,
         } = this.state;
         const { templates } = this.props;
@@ -103,9 +110,10 @@ export default class App extends React.Component {
             <div className={styles.pluginExamples_previewContainer}>
                 { filteredTemplates.map((item) => {
                     const url = `${strapi.backendURL}${item.image}`;
+                    const selected = selectedTemplates.includes(item.id);
                     const className = cn(
                         styles.pluginExamples_previewContainerItem,
-                        item.id === template && styles.pluginExamples_previewContainerItemActive
+                        selected && styles.pluginExamples_previewContainerItemActive
                     );
                     return (
                         <div

@@ -196,6 +196,7 @@ export default class App extends React.Component {
             format,
             image,
             edit,
+            crop,
         } = this.state;
         const {
             previewResult,
@@ -224,12 +225,14 @@ export default class App extends React.Component {
                 ...configurator,
                 genre,
                 format,
+                crop,
             });
         } else {
             this.props.save(image, templateFile, {
                 ...configurator,
                 genre,
                 format,
+                crop,
                 user: user._id, // eslint-disable-line
             });
         }
@@ -240,6 +243,8 @@ export default class App extends React.Component {
             edit: true,
             configurator: template,
             tab: 'configurator',
+            format: template.format,
+            crop: template.crop,
             configuratorChanged: false,
         });
     };

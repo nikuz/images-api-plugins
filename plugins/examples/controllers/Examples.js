@@ -17,6 +17,13 @@ module.exports = {
             return;
         }
 
+        if (!fields.templates) {
+            ctx.response.serverUnavailable('define templates');
+            return;
+        }
+
+        const templates = fields.templates.split(',');
+
         const randomImage = await Image // eslint-disable-line
             .aggregate([
                 { $match: { genre: mongoose.Types.ObjectId(fields.genre) } },
@@ -26,6 +33,12 @@ module.exports = {
         const randomQuote = await Quotes // eslint-disable-line
             .aggregate([
                 { $match: { genre: mongoose.Types.ObjectId(fields.genre) } },
+                { $sample: { size: 1 } },
+            ]);
+
+        const randomTemplate = await Templates // eslint-disable-line
+            .aggregate([
+                { $match: { id: { $in: templates } } },
                 { $sample: { size: 1 } },
             ]);
 
@@ -41,15 +54,25 @@ module.exports = {
             return;
         }
 
-        const width = Number(fields.width);
-        const height = Number(fields.height);
+        if (!randomTemplate || !randomTemplate[0]) {
+            ctx.response.serverUnavailable('no random template');
+            return;
+        }
+
+        let width = 500;
+        let height = 500;
+        if (randomTemplate[0].crop === 1024) {
+            width = 500;
+            height = width / 2;
+        }
         const props = {
-            ...ctx.request.body.fields,
+            ...randomTemplate[0],
+            animate: randomTemplate[0].format !== 'jpeg',
             imageURL: `${apiUrl}${randomImage[0].url}`,
             text: randomQuote[0].text,
             author: randomQuote[0].author,
-            width: width < 1080 ? width : 500,
-            height: height < 1080 ? height : 500,
+            width,
+            height,
             watermark: true,
         };
         delete props.image;
