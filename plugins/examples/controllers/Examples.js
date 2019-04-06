@@ -22,17 +22,25 @@ module.exports = {
             return;
         }
 
+        let genreMongoObject;
+        try {
+            genreMongoObject = mongoose.Types.ObjectId(fields.genre);
+        } catch (e) {
+            ctx.response.serverUnavailable('wrong genre');
+            return;
+        }
+
         const templates = fields.templates.split(',');
 
         const randomImage = await Image // eslint-disable-line
             .aggregate([
-                { $match: { genre: mongoose.Types.ObjectId(fields.genre) } },
+                { $match: { genre: genreMongoObject } },
                 { $sample: { size: 1 } },
             ]);
 
         const randomQuote = await Quotes // eslint-disable-line
             .aggregate([
-                { $match: { genre: mongoose.Types.ObjectId(fields.genre) } },
+                { $match: { genre: genreMongoObject } },
                 { $sample: { size: 1 } },
             ]);
 
