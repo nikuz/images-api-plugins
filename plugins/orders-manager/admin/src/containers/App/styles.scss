@@ -1,0 +1,88 @@
+
+.pluginOrdersManager_container {
+  position: relative;
+}
+
+.pluginOrdersManager_loading {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  padding-top: 100px;
+  background-color: rgba(255, 255, 255, 0.5);
+
+  > div > div {
+    width: 50px;
+    height: 50px;
+  }
+}
+
+.pluginOrdersManager_list {
+  width: 100%;
+  border-radius: 3px;
+  border-collapse: initial;
+  overflow: hidden;
+  box-shadow: 0 2px 4px #E3E9F3;
+  table-layout: fixed;
+}
+
+.pluginOrdersManager_listHeadRow {
+  background: #F3F3F3;
+  height: 41px;
+
+  th {
+    padding: 0 15px;
+  }
+}
+
+.pluginOrdersManager_listRow {
+  height: 54px;
+  background: #FFF;
+
+  &:hover {
+    cursor: pointer;
+    background: #F7F8F8;
+  }
+
+  td {
+    padding: 0 15px;
+    line-height: 53px;
+    font-size: 1.3rem;
+    font-weight: 400;
+    color: #333740;
+    border-collapse: collapse;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    border-top: 1px solid #F1F1F2 !important;
+  }
+}
+
+.pluginOrdersManager_listRowRemoveIcon {
+  position: relative;
+  display: inline-block;
+  padding: 10px 20px;
+  text-align: center;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #FFF;
+  }
+
+  i {
+    font-size: 20px;
+  }
+}
+
+.pluginOrdersManager_listRowRemoveIcon:hover i {
+  color: #F00;
+}
+
+.pluginOrdersManager_listRowRemoveIconBlocker {
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 10;
+}

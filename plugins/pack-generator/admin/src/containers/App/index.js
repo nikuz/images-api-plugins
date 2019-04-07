@@ -28,6 +28,15 @@ import {
 import reducer from './reducer';
 import saga from './saga';
 
+const mapStateToProps = createStructuredSelector({
+    user: getUser(),
+    userLoading: isUserLoading(),
+    images: getImages(),
+    imagesLoading: isImagesLoading(),
+    quotes: getQuotes(),
+    quotesLoading: isQuotesLoading(),
+});
+
 const mapDispatchToProps = dispatch => bindActionCreators(
     {
         userLoadingRequest,
@@ -37,15 +46,6 @@ const mapDispatchToProps = dispatch => bindActionCreators(
     },
     dispatch
 );
-
-const mapStateToProps = createStructuredSelector({
-    user: getUser(),
-    userLoading: isUserLoading(),
-    images: getImages(),
-    imagesLoading: isImagesLoading(),
-    quotes: getQuotes(),
-    quotesLoading: isQuotesLoading(),
-});
 
 const withConnect = connect(mapStateToProps, mapDispatchToProps);
 

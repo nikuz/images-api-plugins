@@ -1,0 +1,18 @@
+
+import keyMirror from '../../utils/key-mirror';
+
+export default keyMirror('PACK_GENERATOR', [
+    'ORDERS_GET_REQUEST',
+    'ORDERS_GET_SUCCESS',
+    'ORDERS_GET_FAILURE',
+    'ORDERS_GET_COUNT_REQUEST',
+    'ORDERS_GET_COUNT_SUCCESS',
+    'ORDERS_GET_COUNT_FAILURE',
+    'GENRES_GET_REQUEST',
+    'GENRES_GET_SUCCESS',
+    'GENRES_GET_FAILURE',
+    'ORDERS_DELETE_REQUEST',
+    'ORDERS_DELETE_SUCCESS',
+    'ORDERS_DELETE_FAILURE',
+    'CLEAR_STORE',
+]);

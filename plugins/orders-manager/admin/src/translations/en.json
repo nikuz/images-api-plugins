@@ -1,0 +1,12 @@
+{
+  "Title": "Orders Manager",
+  "Description": "Here you can check orders",
+  "Order.ID": "ID",
+  "Order.Format": "Format",
+  "Order.Crop": "Crop",
+  "Order.Logo": "Logo",
+  "Order.Copyright": "Copyright",
+  "Order.CreatedAt": "CreatedAt",
+  "Order.Genre": "Genre",
+  "Order.Status": "Status"
+}
